@@ -1,0 +1,51 @@
+[
+  {
+    "year": 1999,
+    "make": "Nissan",
+    "model": "Stagea",
+    "rego": "DE56YK",
+    "nickName": "StageaName"
+  },
+  {
+    "year": 2010,
+    "make": "Toyota",
+    "model": "Kluger",
+    "rego": "CC54FK",
+    "nickName": "KlugerName"
+  },
+  {
+    "year": 2000,
+    "make": "Subaru",
+    "model": "Liberty",
+    "rego": "ENZ47Y",
+    "nickName": "LibertyName"
+  },
+  {
+    "year": 2000,
+    "make": "Woah",
+    "model": "Dude",
+    "rego": "EXAMPLE",
+    "nickName": "DudeName"
+  },
+  {
+    "year": 1500,
+    "make": "Wazaaaaa",
+    "model": "Suuu",
+    "rego": "EXAMPLEOO",
+    "nickName": "SuuuName"
+  },
+  {
+    "year": 2037    ,
+    "make": "Bob",
+    "model": "Bobbies",
+    "rego": "DOBBIE",
+    "nickName": "BobbiesName"
+  },
+  {
+    "year": 1040,
+    "make": "Oldie",
+    "model": "Wowzers",
+    "rego": "OOlDiE",
+    "nickName": "WowzersName"
+  }
+]

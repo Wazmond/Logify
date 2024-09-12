@@ -1,37 +1,70 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import { useState } from "react";
+import AuthPage from "./(auth)/auth";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Provider } from "react-redux";
+import { persistor, store } from "@/store/store";
+import { PersistGate } from "redux-persist/integration/react";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+function StackLayout() {
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Tabs>
+          <Tabs.Screen
+            name="(garage)"
+            options={{
+              headerShown: false,
+              headerTitle: "My Garage",
+              tabBarLabel: "My Garage",
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="garage" color={color} size={30} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="(logs)"
+            options={{
+              headerShown: false,
+              headerTitle: "Logs",
+              tabBarLabel: "Logs",
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="notes" color={color} size={30} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="(profile)"
+            options={{
+              headerShown: false,
+              headerTitle: "Profile",
+              tabBarLabel: "Profile",
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="account-circle" color={color} size={30} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name="(auth)/auth"
+            options={{
+              headerShown: false,
+              href: null,
+            }}
+          />
+          <Tabs.Screen
+            name="index"
+            options={{
+              headerShown: false,
+              href: null,
+            }}
+          />
+        </Tabs>
+      </PersistGate>
+    </Provider>
   );
 }
+
+export default StackLayout;
