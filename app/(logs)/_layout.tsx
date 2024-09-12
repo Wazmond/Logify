@@ -10,6 +10,11 @@ const LogsLayout = () => {
         options={{
           headerShown: false
         }} />
+        {/* <Stack.Screen 
+        name='addLogModal'
+        options={{
+          headerShown: false
+        }} /> */}
     </Stack>
   );
 };

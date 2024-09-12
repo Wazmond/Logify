@@ -12,6 +12,7 @@ import {
 } from "redux-persist";
 // import storage from "redux-persist/lib/storage"; // Local storage for web
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import logsSlice from "@/slices/logsSlice";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +21,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   myGarage: garageSlice,
+  logs: logsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface GarageObject {
+  vehUUID: string;
   car: {
     year: number;
     make: string;
@@ -12,8 +13,6 @@ export interface GarageObject {
 
 type GarageStore = {
   garage: GarageObject[];
-//   addToGarage: (payload: GarageObject) => void;
-  // removeFromGarage: () => void
 };
 
 const initialState: GarageStore = {

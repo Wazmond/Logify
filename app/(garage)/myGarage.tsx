@@ -47,7 +47,7 @@ export default function Index() {
             My Garage
           </Text>
         </View>
-        <View style={{ borderRadius: 50 }}>
+        <View style={{ borderRadius: 50, backgroundColor: '#ffffff', padding: 5}}>
           <Link href="./addMenuPage">
             <AntDesign name="plus" size={30} style={{ borderRadius: 50 }} />
           </Link>

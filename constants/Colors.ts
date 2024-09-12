@@ -24,3 +24,11 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+const iosColors = {
+  placeholder: '#9BA1A6',
+  blue: '#0E7AFE',
+  unclickable: '#BBBBBB',
+  background: '#F0F0F0',
+
+}
