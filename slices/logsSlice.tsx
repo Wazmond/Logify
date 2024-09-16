@@ -5,7 +5,7 @@ export interface LogsObject {
   vehUUID: string;
   date: string;
   time: string;
-  event: string;
+  label: string;
   data: {
     title: string;
     desc: string;
