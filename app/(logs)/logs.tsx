@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     flex: 1.5,
     backgroundColor: "white",
     borderRadius: 15,
-    paddingLeft: 15,
+    marginHorizontal: 15
   },
   dropdownPlaceholder: {
     textAlign: "center",
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
   },
   iconCircle: {
     backgroundColor: "#ffffff",
