@@ -16,25 +16,37 @@ import cars from "../../cars.json";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import LogModal from "./logModal";
+import VehicleDropdownItem from "@/customTypings";
+import { LogsObject } from "@/slices/logsSlice";
 
 const LogsPage = () => {
-  const [value, setValue] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState("all");
   const [modalState, setModalState] = useState(false);
 
-  const logsList = useSelector((state: any) => state.logs);
+  const vehicles: VehicleDropdownItem[] = [
+    { vehUUID: "all", name: "All Vehicles" },
+    ...useSelector((state: any) => state.myGarage.garage).map((veh: any) => {
+      return {
+        ...veh,
+        name: `${veh.car.year} ${veh.car.make} ${veh.car.model}`,
+      };
+    }),
+  ];
 
+  const logsList = useSelector((state: any) => state.logs);
+  console.log(logsList);
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Logs</Text>
         <Dropdown
-          data={cars}
-          value={value}
-          labelField="nickName"
-          valueField="nickName"
+          data={vehicles}
+          value={selectedVehicle}
+          labelField="name"
+          valueField="vehUUID"
           placeholder="Select Vehicle"
           onChange={(car) => {
-            setValue(car.nickName);
+            setSelectedVehicle(car.vehUUID);
           }}
           style={styles.dropdown}
           placeholderStyle={styles.dropdownPlaceholder}
@@ -68,17 +80,26 @@ const LogsPage = () => {
       </View>
 
       <ScrollView>
-        {Array.isArray(logsList) &&
-          logsList.map((log, index) => {
-            return (
-              <View key={index}>
-                <Text>{log.title}</Text>
-              </View>
-            );
-          })}
+        {selectedVehicle === "all" ? (
+          <></>
+        ) : (
+          logsList[selectedVehicle] && // Check if logs exist for the selected vehicle
+          Object.entries(logsList[selectedVehicle]).map(
+            ([logKey, log]: [string, any]) => (
+              <TouchableOpacity key={logKey}
+              style={styles.logsTouchable}>
+                <Text>{log.data.title}</Text>
+                <Text>{log.data.desc}</Text>
+                <Text>
+                  {log.date} {log.time}
+                </Text>
+              </TouchableOpacity>
+            )
+          )
+        )}
       </ScrollView>
 
-      <LogModal modalState={modalState} setModalState={setModalState}/>
+      <LogModal modalState={modalState} setModalState={setModalState} />
     </SafeAreaView>
   );
 };
@@ -106,7 +127,7 @@ const styles = StyleSheet.create({
     flex: 1.5,
     backgroundColor: "white",
     borderRadius: 15,
-    marginHorizontal: 15
+    marginHorizontal: 15,
   },
   dropdownPlaceholder: {
     textAlign: "center",
@@ -138,4 +159,10 @@ const styles = StyleSheet.create({
   icon: {
     margin: 5,
   },
+  logsTouchable: {
+    backgroundColor: '#ffffff',
+    margin: 20,
+    borderRadius: 15,
+    padding: 10
+  }
 });

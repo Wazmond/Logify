@@ -42,9 +42,12 @@ export const logsSlice = createSlice({
       }
       state[vehUUID][log.logUUID] = log; // Add the log under the vehUUID
     },
+    clearLog: (state) => {
+      state.logs = {};
+    }
   },
 });
 
-export const { addLog } = logsSlice.actions;
+export const { addLog, clearLog } = logsSlice.actions;
 
 export default logsSlice.reducer;

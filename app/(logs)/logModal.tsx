@@ -126,6 +126,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
       },
     };
     formValid && dispatch(addLog({vehUUID: logsVehicle, log}));
+    setModalState(false);
   };
   return (
     <Modal
@@ -141,7 +142,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
             <Text style={styles.modalHeaderCancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.modalHeaderTitleText}>New Log</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleAddPress}>
             <Text
               style={[
                 styles.modalHeaderAddText,

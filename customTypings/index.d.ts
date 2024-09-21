@@ -15,3 +15,15 @@ module.exports = {
     CarType,
     CarProps
 }
+
+export default interface VehicleDropdownItem {
+  vehUUID: string;
+  car: {
+    year: number;
+    make: string;
+    model: string;
+  };
+  rego: string;
+  nickName: string;
+  name: string; // Add the calculated name field
+}
