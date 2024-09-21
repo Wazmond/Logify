@@ -15,13 +15,11 @@ import { Dropdown } from "react-native-element-dropdown";
 import cars from "../../cars.json";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import AddLogModal from "./addLogModal";
+import LogModal from "./logModal";
 
 const LogsPage = () => {
   const [value, setValue] = useState("");
   const [modalState, setModalState] = useState(false);
-
-  // const [logsVehicle, setLogsVehicle] = useState("");
 
   const logsList = useSelector((state: any) => state.logs);
 
@@ -80,7 +78,7 @@ const LogsPage = () => {
           })}
       </ScrollView>
 
-      <AddLogModal modalState={modalState} setModalState={setModalState}/>
+      <LogModal modalState={modalState} setModalState={setModalState}/>
     </SafeAreaView>
   );
 };
