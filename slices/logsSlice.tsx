@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface LogsObject {
   logUUID: string;
@@ -18,26 +18,33 @@ export interface LogsObject {
 }
 
 interface LogsState {
-  logs: LogsObject[];
+  [vehUUID: string]: {
+    [logUUID: string]: LogsObject
+  };
 }
 
-const initialState: LogsState = {
-  logs: [],
-};
+const initialState: LogsState = {};
 
 export const logsSlice = createSlice({
-  name: "logsSlice",
+  name: "logs",
   initialState,
   reducers: {
-    addLog: (state, action) => {
-      state.logs.push(action.payload);
-    },
-    removeLog: (state, action) => {
-      state.logs = state.logs.filter((log) => log.logUUID !== action.payload);
+    // addLog: (state, action) => {
+    //   state.logs.push(action.payload);
+    // },
+    // removeLog: (state, action) => {
+    //   state.logs = state.logs.filter((log) => log.logUUID !== action.payload);
+    // },
+    addLog: (state, action: PayloadAction<{ vehUUID: string; log: LogsObject }>) => {
+      const { vehUUID, log } = action.payload;
+      if (!state[vehUUID]) {
+        state[vehUUID] = {}; // Initialize if not present
+      }
+      state[vehUUID][log.logUUID] = log; // Add the log under the vehUUID
     },
   },
 });
 
-export const { addLog, removeLog } = logsSlice.actions;
+export const { addLog } = logsSlice.actions;
 
 export default logsSlice.reducer;
