@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
+import "react-native-get-random-values"
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { GarageObject, addToGarage } from "@/slices/garageSlice";

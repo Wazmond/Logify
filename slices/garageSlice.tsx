@@ -32,6 +32,6 @@ export const garageSlice = createSlice({
   },
 });
 
-export const { addToGarage } = garageSlice.actions;
+export const { addToGarage, clearGarage } = garageSlice.actions;
 
 export default garageSlice.reducer;
