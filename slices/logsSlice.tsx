@@ -36,11 +36,9 @@ export const logsSlice = createSlice({
         state[vehUUID] = {}; // Initialize if not present
       }
       state[vehUUID][log.logUUID] = log; // Add the log under the vehUUID
-
-
     },
     clearLog: (state) => {
-      state.logs = {};
+      return {};
     }
   },
 });

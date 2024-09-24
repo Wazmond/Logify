@@ -13,14 +13,16 @@ import { useState } from "react";
 import * as React from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { AntDesign } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LogModal from "./logModal";
 import VehicleDropdownItem from "@/customTypings";
 import LogComponent from "./logComponent";
+import { clearLog } from "@/slices/logsSlice";
 
 const LogsPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("all");
   const [modalState, setModalState] = useState(false);
+  const dispatch = useDispatch();
 
   const vehicles: VehicleDropdownItem[] = [
     { vehUUID: "all", name: "All Vehicles" },
@@ -31,6 +33,10 @@ const LogsPage = () => {
       };
     }),
   ];
+
+  const handleClearLog = () => {
+    dispatch(clearLog());
+  };
 
   const logsList = useSelector((state: any) => state.logs);
 
@@ -79,23 +85,29 @@ const LogsPage = () => {
       </View>
 
       <ScrollView style={styles.timelineContainer}>
-      {selectedVehicle === 'all' 
-    ? Object.entries(logsList).map(([vehUUID, logsForVehicle]: [string, any]) => (
-        <View key={vehUUID}>
-          {Object.entries(logsForVehicle).map(([logKey, log]: [string, any]) => (
-        <LogComponent key={logKey} log={log} />
-          ))}
-        </View>
-      ))
-    : (
-      logsList[selectedVehicle] &&
-      Object.entries(logsList[selectedVehicle]).map(([logKey, log]: [string, any]) => (
-        <LogComponent key={logKey} log={log} />
-      ))
-    )}
+        {selectedVehicle === "all"
+          ? Object.entries(logsList).map(
+              ([vehUUID, logsForVehicle]: [string, any]) => (
+                <View key={vehUUID}>
+                  {Object.entries(logsForVehicle).map(
+                    ([logKey, log]: [string, any]) => (
+                      <LogComponent key={logKey} log={log} />
+                    )
+                  )}
+                </View>
+              )
+            )
+          : logsList[selectedVehicle] &&
+            Object.entries(logsList[selectedVehicle]).map(
+              ([logKey, log]: [string, any]) => (
+                <LogComponent key={logKey} log={log} />
+              )
+            )}
       </ScrollView>
 
       <LogModal modalState={modalState} setModalState={setModalState} />
+
+      <Button title="clear log" onPress={handleClearLog} />
     </SafeAreaView>
   );
 };
@@ -156,6 +168,6 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   timelineContainer: {
-    padding: 20
-  }
+    padding: 20,
+  },
 });

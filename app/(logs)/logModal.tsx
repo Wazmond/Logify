@@ -110,14 +110,11 @@ const LogModal: React.FC<NewLogModalProps> = ({
 
   const handleAddPress = (form: LogsObject) => {
     const newDate = new Date();
-    const day = () => {
-      const tempDay = newDate.getDate();
-      return tempDay < 10 ? `0${tempDay}` : tempDay;
-    };
-    const month = () => {
-      const tempMonth = newDate.getMonth() + 1;
-      return tempMonth < 10 ? `0${tempMonth}` : tempMonth;
-    };
+    const formatNumber = (number: number) => (
+      number < 10 ? `0${number}` : number
+    )
+    const day = formatNumber(newDate.getDate());
+    const month = formatNumber(newDate.getMonth() + 1);
     const year = newDate.getFullYear();
     const hours = String(newDate.getHours()).padStart(2, "0");
     const minutes = String(newDate.getMinutes()).padStart(2, "0");
