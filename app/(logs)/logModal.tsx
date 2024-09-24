@@ -111,23 +111,22 @@ const LogModal: React.FC<NewLogModalProps> = ({
   const handleAddPress = (form: LogsObject) => {
     const newDate = new Date();
     const formatNumber = (number: number) => {
-      number < 10 ? `0${number}` : number;
+      return number < 10 ? `0${number}` : `${number}`;
     };
 
-    const day = String(formatNumber(newDate.getDate()));
-    const month = String(formatNumber(newDate.getMonth() + 1));
+    const day = formatNumber(newDate.getDate());
+    const month = formatNumber(newDate.getMonth() + 1);
     const year = String(newDate.getFullYear());
     const hours = String(newDate.getHours()).padStart(2, "0");
     const minutes = String(newDate.getMinutes()).padStart(2, "0");
     const seconds = String(newDate.getSeconds()).padStart(2, "0");
-
+    // console.log(day + month + year + hours + minutes + seconds)
     const log: LogsObject = {
       ...form,
       logUUID: Number(`${year}${month}${day}${hours}${minutes}${seconds}`),
       date: day + "-" + month + "-" + year,
       time: hours + ":" + minutes,
     };
-
     formValid
       ? (dispatch(addLog({ vehUUID: form.vehUUID, log })), setModalState(false))
       : console.log("form is invalid");

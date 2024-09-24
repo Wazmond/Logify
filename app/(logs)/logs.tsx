@@ -39,7 +39,10 @@ const LogsPage = () => {
   };
 
   const logsList = useSelector((state: any) => state.logs);
-  
+  const sortedLogsList = Object.entries(logsList).sort(([a], [b]) => Number(b) - Number(a))
+  // console.log(logsList)
+  // console.log(sortedLogsList)
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
