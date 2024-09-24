@@ -151,7 +151,6 @@ const LogModal: React.FC<NewLogModalProps> = ({
             <Text
               style={[
                 styles.modalHeaderAddText,
-                // formValid ? { color: "#0E7AFE" } : { color: "#bbbbbb" },
                 { color: formValid ? "#0E7AFE" : "#bbbbbb" },
               ]}
             >
