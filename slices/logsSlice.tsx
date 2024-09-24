@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface LogsObject {
-  logUUID: string;
+  logUUID: number;
   vehUUID: string;
   date: string;
   time: string;

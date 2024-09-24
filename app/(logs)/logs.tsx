@@ -39,7 +39,7 @@ const LogsPage = () => {
   };
 
   const logsList = useSelector((state: any) => state.logs);
-
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>

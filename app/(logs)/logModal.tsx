@@ -37,7 +37,7 @@ interface LabelDropdown {
 }
 
 const initialState: LogsObject = {
-  logUUID: "",
+  logUUID: 0,
   vehUUID: "",
   date: "",
   time: "",
@@ -110,20 +110,20 @@ const LogModal: React.FC<NewLogModalProps> = ({
 
   const handleAddPress = (form: LogsObject) => {
     const newDate = new Date();
-    const formatNumber = (number: number) => (
-      number < 10 ? `0${number}` : number
-    )
-    const day = formatNumber(newDate.getDate());
-    const month = formatNumber(newDate.getMonth() + 1);
-    const year = newDate.getFullYear();
+    const formatNumber = (number: number) => {
+      number < 10 ? `0${number}` : number;
+    };
+
+    const day = String(formatNumber(newDate.getDate()));
+    const month = String(formatNumber(newDate.getMonth() + 1));
+    const year = String(newDate.getFullYear());
     const hours = String(newDate.getHours()).padStart(2, "0");
     const minutes = String(newDate.getMinutes()).padStart(2, "0");
     const seconds = String(newDate.getSeconds()).padStart(2, "0");
 
     const log: LogsObject = {
       ...form,
-      logUUID:
-        form.vehUUID + "-" + year + month + day + hours + minutes + seconds,
+      logUUID: Number(`${year}${month}${day}${hours}${minutes}${seconds}`),
       date: day + "-" + month + "-" + year,
       time: hours + ":" + minutes,
     };
