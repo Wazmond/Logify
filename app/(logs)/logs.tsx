@@ -9,15 +9,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { FC, useState } from "react";
+import { useState } from "react";
 import * as React from "react";
 import { Dropdown } from "react-native-element-dropdown";
-import cars from "../../cars.json";
 import { AntDesign } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import LogModal from "./logModal";
 import VehicleDropdownItem from "@/customTypings";
-import { LogsObject } from "@/slices/logsSlice";
+import LogComponent from "./logComponent";
 
 const LogsPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("all");
@@ -34,7 +33,7 @@ const LogsPage = () => {
   ];
 
   const logsList = useSelector((state: any) => state.logs);
-  console.log(logsList);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
@@ -79,24 +78,21 @@ const LogsPage = () => {
         </View>
       </View>
 
-      <ScrollView>
-        {selectedVehicle === "all" ? (
-          <></>
-        ) : (
-          logsList[selectedVehicle] && // Check if logs exist for the selected vehicle
-          Object.entries(logsList[selectedVehicle]).map(
-            ([logKey, log]: [string, any]) => (
-              <TouchableOpacity key={logKey}
-              style={styles.logsTouchable}>
-                <Text>{log.data.title}</Text>
-                <Text>{log.data.desc}</Text>
-                <Text>
-                  {log.date} {log.time}
-                </Text>
-              </TouchableOpacity>
-            )
-          )
-        )}
+      <ScrollView style={styles.timelineContainer}>
+      {selectedVehicle === 'all' 
+    ? Object.entries(logsList).map(([vehUUID, logsForVehicle]: [string, any]) => (
+        <View key={vehUUID}>
+          {Object.entries(logsForVehicle).map(([logKey, log]: [string, any]) => (
+        <LogComponent key={logKey} log={log} />
+          ))}
+        </View>
+      ))
+    : (
+      logsList[selectedVehicle] &&
+      Object.entries(logsList[selectedVehicle]).map(([logKey, log]: [string, any]) => (
+        <LogComponent key={logKey} log={log} />
+      ))
+    )}
       </ScrollView>
 
       <LogModal modalState={modalState} setModalState={setModalState} />
@@ -159,10 +155,7 @@ const styles = StyleSheet.create({
   icon: {
     margin: 5,
   },
-  logsTouchable: {
-    backgroundColor: '#ffffff',
-    margin: 20,
-    borderRadius: 15,
-    padding: 10
+  timelineContainer: {
+    padding: 20
   }
 });
