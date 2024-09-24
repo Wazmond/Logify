@@ -36,19 +36,31 @@ interface LabelDropdown {
   value: string;
 }
 
+const initialState: LogsObject = {
+  logUUID: "",
+  vehUUID: "",
+  date: "",
+  time: "",
+  label: "",
+  data: {
+    title: "",
+    desc: "",
+  },
+  additionals: {
+    odo: "",
+    location: "",
+    price: "",
+    notes: "",
+  },
+};
+
 const LogModal: React.FC<NewLogModalProps> = ({
   modalState,
   setModalState,
 }) => {
   const [formValid, setFormValid] = useState(false);
-  const [logsVehicle, setLogsVehicle] = useState("");
-  const [logsLabel, setLogsLabel] = useState("");
-  const [logsTitle, setLogsTitle] = useState("");
-  const [logsDesc, setLogsDesc] = useState("");
-  const [logsOdo, setLogsOdo] = useState("");
-  const [logsPrice, setLogsPrice] = useState("");
-  const [logsLocation, setLogsLocation] = useState("");
-  const [logsAdditNotes, setLogsAdditNotes] = useState("");
+  const [form, setForm] = useState<LogsObject>(initialState);
+
   const [textInputState, setTextInputState] = useState([
     false,
     false,
@@ -60,18 +72,15 @@ const LogModal: React.FC<NewLogModalProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (logsVehicle && logsLabel && logsTitle && logsDesc) {
-      console.log("Form is valid");
-      setFormValid(true);
-    } else {
-      console.log(
-        "Form is invalid" + logsVehicle + logsLabel + logsTitle + logsDesc
-      );
-      setFormValid(false);
-    }
-  }, [logsVehicle, logsLabel, logsTitle, logsDesc]);
+    form.vehUUID && form.label && form.data.title && form.data.desc
+      ? setFormValid(true)
+      : setFormValid(false);
+  }, [form.vehUUID, form.label, form.data.title, form.data.desc]);
 
-  // const initState = [false, false, false, false, false];
+  useEffect(() => {
+    setForm(initialState);
+    setFormValid(false);
+  }, [modalState]);
 
   const vehicleRef = useRef<any>(null);
   const labelRef = useRef<any>(null);
@@ -99,35 +108,34 @@ const LogModal: React.FC<NewLogModalProps> = ({
     });
   };
 
-  const handleAddPress = () => {
+  const handleAddPress = (form: LogsObject) => {
     const newDate = new Date();
-    const day = newDate.getDate();
-    const month = newDate.getMonth() + 1;
+    const day = () => {
+      const tempDay = newDate.getDate();
+      return tempDay < 10 ? `0${tempDay}` : tempDay;
+    };
+    const month = () => {
+      const tempMonth = newDate.getMonth() + 1;
+      return tempMonth < 10 ? `0${tempMonth}` : tempMonth;
+    };
     const year = newDate.getFullYear();
     const hours = String(newDate.getHours()).padStart(2, "0");
     const minutes = String(newDate.getMinutes()).padStart(2, "0");
     const seconds = String(newDate.getSeconds()).padStart(2, "0");
 
     const log: LogsObject = {
+      ...form,
       logUUID:
-        logsVehicle + "-" + day + month + year + hours + minutes + seconds,
-      vehUUID: logsVehicle,
+        form.vehUUID + "-" + year + month + day + hours + minutes + seconds,
       date: day + "-" + month + "-" + year,
       time: hours + ":" + minutes,
-      label: logsLabel,
-      data: {
-        title: logsTitle,
-        desc: logsDesc,
-      },
-      additionals: {
-        location: logsLocation,
-        price: logsPrice,
-        notes: logsAdditNotes,
-      },
     };
-    formValid && dispatch(addLog({vehUUID: logsVehicle, log}));
-    setModalState(false);
+
+    formValid
+      ? (dispatch(addLog({ vehUUID: form.vehUUID, log })), setModalState(false))
+      : console.log("form is invalid");
   };
+
   return (
     <Modal
       visible={modalState}
@@ -142,7 +150,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
             <Text style={styles.modalHeaderCancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.modalHeaderTitleText}>New Log</Text>
-          <TouchableOpacity onPress={handleAddPress}>
+          <TouchableOpacity onPress={() => handleAddPress(form)}>
             <Text
               style={[
                 styles.modalHeaderAddText,
@@ -161,11 +169,11 @@ const LogModal: React.FC<NewLogModalProps> = ({
               <Text>Vehicle:</Text>
               <Dropdown
                 data={vehicles}
-                value={logsVehicle}
+                value={form.vehUUID}
                 labelField="name"
                 valueField="vehUUID"
                 placeholder="Select Vehicle"
-                onChange={(vehicle) => setLogsVehicle(vehicle.vehUUID)}
+                onChange={(e) => setForm({ ...form, vehUUID: e.vehUUID })}
                 ref={vehicleRef}
               />
             </View>
@@ -176,12 +184,12 @@ const LogModal: React.FC<NewLogModalProps> = ({
               <Text>Label:</Text>
               <Dropdown
                 data={label}
-                value={logsLabel}
+                value={form.label}
                 labelField="label"
                 valueField="value"
                 placeholder="Select Label"
-                onChange={(label) => {
-                  setLogsLabel(label.value);
+                onChange={(e) => {
+                  setForm({ ...form, label: e.label });
                 }}
                 ref={labelRef}
               />
@@ -197,11 +205,13 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="text"
                   placeholder="Enter the title of your log..."
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsTitle}
-                  onChangeText={setLogsTitle}
+                  value={form.data.title}
+                  onChangeText={(e) =>
+                    setForm({ ...form, data: { ...form.data, title: e } })
+                  }
                 />
-              ) : logsTitle ? (
-                <Text>{logsTitle}</Text>
+              ) : form.data.title ? (
+                <Text>{form.data.title}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>
                   Enter the title of your log...
@@ -219,11 +229,13 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="text"
                   placeholder="Enter description..."
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsDesc}
-                  onChangeText={setLogsDesc}
+                  value={form.data.desc}
+                  onChangeText={(e) =>
+                    setForm({ ...form, data: { ...form.data, desc: e } })
+                  }
                 />
-              ) : logsDesc ? (
-                <Text>{logsDesc}</Text>
+              ) : form.data.desc ? (
+                <Text>{form.data.desc}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>
                   Enter description...
@@ -241,11 +253,16 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="numeric"
                   placeholder="0"
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsOdo}
-                  onChangeText={setLogsOdo}
+                  value={form.additionals.odo}
+                  onChangeText={(e) =>
+                    setForm({
+                      ...form,
+                      additionals: { ...form.additionals, odo: e },
+                    })
+                  }
                 />
-              ) : logsOdo ? (
-                <Text>{logsOdo}</Text>
+              ) : form.additionals.odo ? (
+                <Text>{form.additionals.odo}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>0</Text>
               )}
@@ -263,11 +280,16 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="decimal"
                   placeholder="0.00"
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsPrice}
-                  onChangeText={setLogsPrice}
+                  value={form.additionals.price}
+                  onChangeText={(e) =>
+                    setForm({
+                      ...form,
+                      additionals: { ...form.additionals, price: e },
+                    })
+                  }
                 />
-              ) : logsPrice ? (
-                <Text>{logsPrice}</Text>
+              ) : form.additionals.price ? (
+                <Text>{form.additionals.price}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>0.00</Text>
               )}
@@ -283,11 +305,16 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="text"
                   placeholder="Enter a location or shop name..."
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsLocation}
-                  onChangeText={setLogsLocation}
+                  value={form.additionals.location}
+                  onChangeText={(e) =>
+                    setForm({
+                      ...form,
+                      additionals: { ...form.additionals, location: e },
+                    })
+                  }
                 />
-              ) : logsLocation ? (
-                <Text>{logsLocation}</Text>
+              ) : form.additionals.location ? (
+                <Text>{form.additionals.location}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>
                   Enter a location or shop name...
@@ -305,11 +332,16 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   inputMode="text"
                   placeholder="Enter any additional notes..."
                   placeholderTextColor={"#9BA1A6"}
-                  value={logsAdditNotes}
-                  onChangeText={setLogsAdditNotes}
+                  value={form.additionals.notes}
+                  onChangeText={(e) =>
+                    setForm({
+                      ...form,
+                      additionals: { ...form.additionals, notes: e },
+                    })
+                  }
                 />
-              ) : logsAdditNotes ? (
-                <Text>{logsAdditNotes}</Text>
+              ) : form.additionals.notes ? (
+                <Text>{form.additionals.notes}</Text>
               ) : (
                 <Text style={styles.placeholderTextStyling}>
                   Enter any additional notes...
