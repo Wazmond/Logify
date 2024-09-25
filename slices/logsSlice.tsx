@@ -18,7 +18,7 @@ export interface LogsObject {
   };
 }
 
-interface LogsState {
+export interface LogsState {
   [vehUUID: string]: {
     [logUUID: string]: LogsObject
   };
@@ -33,9 +33,9 @@ export const logsSlice = createSlice({
     addLog: (state, action: PayloadAction<{ vehUUID: string; log: LogsObject }>) => {
       const { vehUUID, log } = action.payload;
       if (!state[vehUUID]) {
-        state[vehUUID] = {}; // Initialize if not present
+        state[vehUUID] = {};
       }
-      state[vehUUID][log.logUUID] = log; // Add the log under the vehUUID
+      state[vehUUID][log.logUUID] = log;
     },
     clearLog: (state) => {
       return {};

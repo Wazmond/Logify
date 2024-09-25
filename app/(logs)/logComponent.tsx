@@ -5,6 +5,7 @@ interface LogComponentProps {
   log: any;
 }
 const LogComponent: React.FC<LogComponentProps> = ({ log }) => {
+  console.log("log.data : " + log.data)
   return (
     <View style={styles.container}>
       {/* <View style={styles.timelineView}>

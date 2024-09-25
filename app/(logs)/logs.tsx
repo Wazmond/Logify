@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import LogModal from "./logModal";
 import VehicleDropdownItem from "@/customTypings";
 import LogComponent from "./logComponent";
-import { clearLog } from "@/slices/logsSlice";
+import { LogsObject, LogsState, clearLog } from "@/slices/logsSlice";
 
 const LogsPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("all");
@@ -39,10 +39,22 @@ const LogsPage = () => {
   };
 
   const logsList = useSelector((state: any) => state.logs);
-  const sortedLogsList = Object.entries(logsList).sort(([a], [b]) => Number(b) - Number(a))
-  // console.log(logsList)
-  // console.log(sortedLogsList)
-
+  const sortedLogsList =
+    selectedVehicle === "all"
+      ? Object.entries(logsList as LogsState)
+          .flatMap(([logUUID, logs]) => Object.values(logs))
+          .sort((a, b) => Number(b.logUUID) - Number(a.logUUID))
+      : Object.entries(logsList[selectedVehicle] as LogsState || {})
+      .flatMap(([logUUID, log]) => Object.values([log]))
+          .sort((a, b) => Number(b.logUUID) - Number(a.logUUID));
+  // console.log("-----------------------------")
+  // // console.log("logslist.uuid, logslist.log: " + logsList.uuid + " /////// " + logsList.log)
+  // console.log("LogsList : " + JSON.stringify(logsList, null, 2))
+  // console.log("logsList Object.Entries(logsList)   : " + JSON.stringify(Object.entries(logsList), null, 2))
+  // console.log("logsList Object.Entries(logsList).flatmap   : " + JSON.stringify(Object.entries(logsList as LogsState).flatMap(([logUUID, log]) => Object.values(log)), null, 2))
+  // console.log("-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-x-x-x-x-")
+  // console.log("logsList[SelectedVehicle] : " + JSON.stringify(Object.entries(logsList[selectedVehicle] || {}).flatMap(([logUUID, log]) => Object.values([log])), null, 2))
+  // // console.log("sorted logs List: " + sortedLogsList);
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
@@ -88,24 +100,15 @@ const LogsPage = () => {
       </View>
 
       <ScrollView style={styles.timelineContainer}>
-        {selectedVehicle === "all"
-          ? Object.entries(logsList).map(
-              ([vehUUID, logsForVehicle]: [string, any]) => (
-                <View key={vehUUID}>
-                  {Object.entries(logsForVehicle).map(
-                    ([logKey, log]: [string, any]) => (
-                      <LogComponent key={logKey} log={log} />
-                    )
-                  )}
-                </View>
-              )
-            )
-          : logsList[selectedVehicle] &&
-            Object.entries(logsList[selectedVehicle]).map(
-              ([logKey, log]: [string, any]) => (
-                <LogComponent key={logKey} log={log} />
-              )
-            )}
+        {sortedLogsList &&
+          sortedLogsList.map((log, index) => {
+            // console.log("Log: " + log)
+            return (
+              <View key={index}>
+                <LogComponent log={log} />
+              </View>
+            );
+          })}
       </ScrollView>
 
       <LogModal modalState={modalState} setModalState={setModalState} />
