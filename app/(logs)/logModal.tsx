@@ -8,11 +8,14 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Keyboard,
+  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { LogsObject, addLog } from "@/slices/logsSlice";
+import { Colors } from "@/constants/Colors";
 
 interface NewLogModalProps {
   modalState: boolean;
@@ -36,7 +39,7 @@ interface LabelDropdown {
   value: string;
 }
 
-const initialState: LogsObject = {
+const initialForm: LogsObject = {
   logUUID: 0,
   vehUUID: "",
   date: "",
@@ -59,16 +62,8 @@ const LogModal: React.FC<NewLogModalProps> = ({
   setModalState,
 }) => {
   const [formValid, setFormValid] = useState(false);
-  const [form, setForm] = useState<LogsObject>(initialState);
+  const [form, setForm] = useState<LogsObject>(initialForm);
 
-  const [textInputState, setTextInputState] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,12 +73,18 @@ const LogModal: React.FC<NewLogModalProps> = ({
   }, [form.vehUUID, form.label, form.data.title, form.data.desc]);
 
   useEffect(() => {
-    setForm(initialState);
+    setForm(initialForm);
     setFormValid(false);
   }, [modalState]);
 
   const vehicleRef = useRef<any>(null);
   const labelRef = useRef<any>(null);
+  const titleRef = useRef<any>(null);
+  const descRef = useRef<any>(null);
+  const odoRef = useRef<any>(null);
+  const priceRef = useRef<any>(null);
+  const locationRef = useRef<any>(null);
+  const notesRef = useRef<any>(null);
 
   const vehicles: VehicleDropdownItem[] = useSelector(
     (state: any) => state.myGarage.garage
@@ -92,21 +93,12 @@ const LogModal: React.FC<NewLogModalProps> = ({
   });
 
   const label: LabelDropdown[] = [
-    { label: "Check Up", value: "CheckUp" },
-    { label: "Service", value: "Service" },
+    { label: "Inspection", value: "Inspection" },
     { label: "Maintenance", value: "Maintenance" },
     { label: "Modification", value: "Modification" },
     { label: "Other", value: "Other" },
+    // { label: "Service", value: "Service" },
   ];
-
-  const toggleTextInput = (index: number) => {
-    Keyboard.dismiss();
-    setTextInputState(() => {
-      const newState = [false, false, false, false, false];
-      newState[index] = true;
-      return newState;
-    });
-  };
 
   const handleAddPress = (form: LogsObject) => {
     const newDate = new Date();
@@ -140,63 +132,68 @@ const LogModal: React.FC<NewLogModalProps> = ({
       presentationStyle="formSheet"
       style={{ backgroundColor: "#F0F0F0" }}
     >
-      <KeyboardAvoidingView>
-        <View style={styles.modalHeader}>
-          <TouchableOpacity onPress={() => setModalState(false)}>
-            <Text style={styles.modalHeaderCancelText}>Cancel</Text>
-          </TouchableOpacity>
-          <Text style={styles.modalHeaderTitleText}>New Log</Text>
-          <TouchableOpacity onPress={() => handleAddPress(form)}>
-            <Text
-              style={[
-                styles.modalHeaderAddText,
-                { color: formValid ? "#0E7AFE" : "#bbbbbb" },
-              ]}
-            >
-              Add
-            </Text>
-          </TouchableOpacity>
-        </View>
+      {/* <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-200} > */}
+      <View style={styles.modalHeader}>
+        <TouchableOpacity
+          onPress={() => {
+            setModalState(false), setForm(initialForm);
+          }}
+        >
+          <Text style={styles.modalHeaderCancelText}>Cancel</Text>
+        </TouchableOpacity>
+        <Text style={styles.modalHeaderTitleText}>New Log</Text>
+        <TouchableOpacity onPress={() => handleAddPress(form)}>
+          <Text
+            style={[
+              styles.modalHeaderAddText,
+              { color: formValid ? "#0E7AFE" : "#bbbbbb" },
+            ]}
+          >
+            Add
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-        <View style={{ backgroundColor: "#F0F0F0", height: "100%" }}>
-          <TouchableWithoutFeedback onPress={() => vehicleRef.current.open()}>
-            <View style={styles.box}>
-              <Text>Vehicle:</Text>
-              <Dropdown
-                data={vehicles}
-                value={form.vehUUID}
-                labelField="name"
-                valueField="vehUUID"
-                placeholder="Select Vehicle"
-                onChange={(e) => setForm({ ...form, vehUUID: e.vehUUID })}
-                ref={vehicleRef}
-              />
-            </View>
-          </TouchableWithoutFeedback>
+      <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={100}>
+        <ScrollView>
+          <View style={{ backgroundColor: "#F0F0F0", height: "100%" }}>
+            <TouchableWithoutFeedback onPress={() => vehicleRef.current.open()}>
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Vehicle:</Text>
+                <Dropdown
+                  data={vehicles}
+                  value={form.vehUUID}
+                  labelField="name"
+                  valueField="vehUUID"
+                  placeholder="Select Vehicle"
+                  onChange={(e) => setForm({ ...form, vehUUID: e.vehUUID })}
+                  ref={vehicleRef}
+                />
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => labelRef.current.open()}>
-            <View style={styles.box}>
-              <Text>Label:</Text>
-              <Dropdown
-                data={label}
-                value={form.label}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Label"
-                onChange={(e) => {
-                  setForm({ ...form, label: e.label });
-                }}
-                ref={labelRef}
-              />
-            </View>
-          </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => labelRef.current.open()}>
+              <View style={[styles.box, { marginBottom: 15 }]}>
+                <Text style={styles.formTitles}>Label:</Text>
+                <Dropdown
+                  data={label}
+                  value={form.label}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select Label"
+                  onChange={(e) => {
+                    setForm({ ...form, label: e.label });
+                  }}
+                  ref={labelRef}
+                />
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(0)}>
-            <View style={styles.box}>
-              <Text>Title:</Text>
-              {textInputState[0] ? (
+            <TouchableWithoutFeedback onPress={() => titleRef.current.focus()}>
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Title:</Text>
                 <TextInput
-                  autoFocus={true}
+                  ref={titleRef}
                   inputMode="text"
                   placeholder="Enter the title of your log..."
                   placeholderTextColor={"#9BA1A6"}
@@ -204,99 +201,90 @@ const LogModal: React.FC<NewLogModalProps> = ({
                   onChangeText={(e) =>
                     setForm({ ...form, data: { ...form.data, title: e } })
                   }
+                  onSubmitEditing={() => descRef.current.focus()}
                 />
-              ) : form.data.title ? (
-                <Text>{form.data.title}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>
-                  Enter the title of your log...
-                </Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(1)}>
-            <View style={styles.box}>
-              <Text>Description:</Text>
-              {textInputState[1] ? (
+            <TouchableWithoutFeedback onPress={() => descRef.current.focus()}>
+              <View style={[styles.box, { marginBottom: 15 }]}>
+                <Text style={styles.formTitles}>Description:</Text>
                 <TextInput
-                  autoFocus={true}
+                  ref={descRef}
                   inputMode="text"
                   placeholder="Enter description..."
+                  multiline={true}
                   placeholderTextColor={"#9BA1A6"}
                   value={form.data.desc}
                   onChangeText={(e) =>
                     setForm({ ...form, data: { ...form.data, desc: e } })
                   }
+                  onSubmitEditing={() => odoRef.current.focus()}
                 />
-              ) : form.data.desc ? (
-                <Text>{form.data.desc}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>
-                  Enter description...
-                </Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(2)}>
-            <View style={styles.box}>
-              <Text>Odometer:</Text>
-              {textInputState[2] ? (
-                <TextInput
-                  autoFocus={true}
-                  inputMode="numeric"
-                  placeholder="0"
-                  placeholderTextColor={"#9BA1A6"}
-                  value={form.additionals.odo}
-                  onChangeText={(e) =>
-                    setForm({
-                      ...form,
-                      additionals: { ...form.additionals, odo: e },
-                    })
-                  }
-                />
-              ) : form.additionals.odo ? (
-                <Text>{form.additionals.odo}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>0</Text>
-              )}
-              <Text>Km</Text>
-            </View>
-          </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => odoRef.current.focus()}>
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Odometer:</Text>
+                <View style={styles.inlineView}>
+                  <TextInput
+                    ref={odoRef}
+                    inputMode="numeric"
+                    placeholder="0"
+                    placeholderTextColor={"#9BA1A6"}
+                    value={
+                      form.additionals.odo &&
+                      Number(form.additionals.odo).toLocaleString()
+                    }
+                    onChangeText={(e) =>
+                      setForm({
+                        ...form,
+                        additionals: {
+                          ...form.additionals,
+                          odo: e.replaceAll(",", ""),
+                        },
+                      })
+                    }
+                    onSubmitEditing={() => priceRef.current.focus()}
+                    returnKeyType="done"
+                  />
+                  <Text>Km</Text>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(3)}>
-            <View style={styles.box}>
-              <Text>Price:</Text>
-              <Text>$</Text>
-              {textInputState[3] ? (
-                <TextInput
-                  autoFocus={true}
-                  inputMode="decimal"
-                  placeholder="0.00"
-                  placeholderTextColor={"#9BA1A6"}
-                  value={form.additionals.price}
-                  onChangeText={(e) =>
-                    setForm({
-                      ...form,
-                      additionals: { ...form.additionals, price: e },
-                    })
-                  }
-                />
-              ) : form.additionals.price ? (
-                <Text>{form.additionals.price}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>0.00</Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => priceRef.current.focus()}>
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Price:</Text>
+                <View style={styles.inlineView}>
+                  <Text>$</Text>
+                  <TextInput
+                    ref={priceRef}
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    placeholderTextColor={"#9BA1A6"}
+                    value={form.additionals.price}
+                    onChangeText={(e) =>
+                      setForm({
+                        ...form,
+                        additionals: { ...form.additionals, price: e },
+                      })
+                    }
+                    onSubmitEditing={() => locationRef.current.focus()}
+                    returnKeyType="done"
+                  />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(4)}>
-            <View style={styles.box}>
-              <Text>Location:</Text>
-              {textInputState[4] ? (
+            <TouchableWithoutFeedback
+              onPress={() => locationRef.current.focus()}
+            >
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Location:</Text>
                 <TextInput
-                  autoFocus={true}
+                  ref={locationRef}
                   inputMode="text"
                   placeholder="Enter a location or shop name..."
                   placeholderTextColor={"#9BA1A6"}
@@ -307,23 +295,16 @@ const LogModal: React.FC<NewLogModalProps> = ({
                       additionals: { ...form.additionals, location: e },
                     })
                   }
+                  onSubmitEditing={() => notesRef.current.focus()}
                 />
-              ) : form.additionals.location ? (
-                <Text>{form.additionals.location}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>
-                  Enter a location or shop name...
-                </Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => toggleTextInput(5)}>
-            <View style={styles.box}>
-              <Text>Additional Notes:</Text>
-              {textInputState[5] ? (
+            <TouchableWithoutFeedback onPress={() => notesRef.current.focus()}>
+              <View style={styles.box}>
+                <Text style={styles.formTitles}>Additional Notes:</Text>
                 <TextInput
-                  autoFocus={true}
+                  ref={notesRef}
                   inputMode="text"
                   placeholder="Enter any additional notes..."
                   placeholderTextColor={"#9BA1A6"}
@@ -335,16 +316,10 @@ const LogModal: React.FC<NewLogModalProps> = ({
                     })
                   }
                 />
-              ) : form.additionals.notes ? (
-                <Text>{form.additionals.notes}</Text>
-              ) : (
-                <Text style={styles.placeholderTextStyling}>
-                  Enter any additional notes...
-                </Text>
-              )}
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -359,6 +334,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     justifyContent: "space-between",
     backgroundColor: "#f0f0f0",
+    zIndex: 10,
   },
   modalHeaderTitleText: {
     fontSize: 20,
@@ -388,7 +364,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
   },
+  formTitles: {
+    color: Colors.light.text,
+    fontSize: 16,
+    marginBottom: 5,
+  },
   placeholderTextStyling: {
     color: "#9BA1A6",
+  },
+  inlineView: {
+    flexDirection: "row",
+    gap: 5,
   },
 });
