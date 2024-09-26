@@ -100,9 +100,7 @@ const LogsPage = () => {
       </View>
 
       <ScrollView style={styles.timelineContainer}>
-        {sortedLogsList &&
-          sortedLogsList.map((log, index) => {
-            // console.log("Log: " + log)
+        {sortedLogsList?.map((log, index) => {
             return (
               <View key={index}>
                 <LogComponent log={log} />
