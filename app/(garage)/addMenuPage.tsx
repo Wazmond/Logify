@@ -12,8 +12,8 @@ import "react-native-get-random-values"
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { GarageObject, addToGarage } from "@/slices/garageSlice";
-import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import { dispatch } from "@/constants/hooks";
  
 const AddMenuPage = () => {
   const [year, setYear] = useState('');
@@ -24,13 +24,11 @@ const AddMenuPage = () => {
   const [nickname, setNickname] = useState("");
 
   const router = useRouter();
-  const dispatch = useDispatch();
-  // const addToGarage = useGarageStore((state) => state.addToGarage);
-
 
   const handleAddPress = () => {
     const payload: GarageObject = {
       vehUUID: uuidv4(),
+      name: `${year} ${make} ${model}`,
       car: {
         year: parseInt(year, 10),
         make: make,
