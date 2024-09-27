@@ -4,27 +4,24 @@ import {
   View,
   StyleSheet,
   Button,
-  TouchableHighlight,
   ScrollView,
   TouchableOpacity,
-  Modal,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import cars from "../../cars.json";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { GarageObject } from "@/slices/garageSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  GarageObject,
+  clearGarage,
+  garageSelector,
+} from "@/slices/garageSlice";
 
 export default function Index() {
   const [addMenu, setAddMenu] = useState(false);
-  // const garage = useGarageStore((state) => state.garage);
-  const garage = useSelector((state: any) => state.myGarage.garage)
-  // const garage = cars;
-  // const handleAddPress = () => {
-  //   setAddMenu(!addMenu);
-  // };
+  const garage: GarageObject[] = useSelector(garageSelector) || [];
+
+  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,7 +44,9 @@ export default function Index() {
             My Garage
           </Text>
         </View>
-        <View style={{ borderRadius: 50, backgroundColor: '#ffffff', padding: 5}}>
+        <View
+          style={{ borderRadius: 50, backgroundColor: "#ffffff", padding: 5 }}
+        >
           <Link href="./addMenuPage">
             <AntDesign name="plus" size={30} style={{ borderRadius: 50 }} />
           </Link>
@@ -61,16 +60,17 @@ export default function Index() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {Array.isArray(garage) &&
+        {garage.length === 0 ? (
+          <Text>No vehicles in the garage</Text>
+        ) : (
           garage.map((vehicle, index) => {
-            const vehicleName = `${vehicle.car.year} ${vehicle.car.make} ${vehicle.car.model}`;
             return (
               <TouchableOpacity
                 key={index}
                 onPress={() =>
                   router.navigate({
                     pathname: "/car/[car]",
-                    params: { car: vehicleName },
+                    params: { car: vehicle.name },
                   })
                 }
                 style={{
@@ -99,7 +99,7 @@ export default function Index() {
                         fontSize: 22,
                       }}
                     >
-                      {vehicleName}
+                      {vehicle.name}
                     </Text>
                     <Text
                       style={{
@@ -115,7 +115,10 @@ export default function Index() {
                 </View>
               </TouchableOpacity>
             );
-          })}
+          })
+        )}
+
+        <Button title="Clear Vehicles" onPress={() => dispatch(clearGarage())} />
       </ScrollView>
     </SafeAreaView>
   );

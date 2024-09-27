@@ -14,11 +14,6 @@ const GarageTab = () => {
       />
       <Stack.Screen
         name="car/[car]"
-        options={
-          {
-            //   headerTitle: "car",
-          }
-        }
       />
       <Stack.Screen
       name="addMenuPage"
