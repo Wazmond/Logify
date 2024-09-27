@@ -1,39 +1,20 @@
 [
+  { "state": false, "log": {} },
   {
-    "logUUID": 20240924184846,
-    "vehUUID": "7fc8ff1f-3e88-49b4-bd70-2d819249e7bd",
-    "date": "24-09-2024",
-    "time": "18:48",
-    "label": "Maintenance",
-    "data": { "title": "aaa", "desc": "aaa" },
-    "additionals": {
-      "odo": "352",
-      "location": "",
-      "price": "5363",
-      "notes": ""
+    "state": true,
+    "log": {
+      "logUUID": 20240926215631,
+      "vehUUID": "d11378e9-792b-492e-8edd-37c62d41fb89",
+      "date": "26-09-2024",
+      "time": "21:56",
+      "label": "Maintenance",
+      "data": { "title": "Oil Change", "desc": "Oil Change" },
+      "additionals": {
+        "odo": "130000",
+        "location": "garage ",
+        "price": "80",
+        "notes": ""
+      }
     }
-  },
-  {
-    "logUUID": 20240924184915,
-    "vehUUID": "7fc8ff1f-3e88-49b4-bd70-2d819249e7bd",
-    "date": "24-09-2024",
-    "time": "18:49",
-    "label": "Maintenance",
-    "data": { "title": "bbb", "desc": "bbb" },
-    "additionals": {
-      "odo": "63634",
-      "location": "",
-      "price": "363",
-      "notes": ""
-    }
-  },
-  {
-    "logUUID": 20240924184924,
-    "vehUUID": "c4574508-a907-4dc4-ac41-1cd3e9ebe216",
-    "date": "24-09-2024",
-    "time": "18:49",
-    "label": "Maintenance",
-    "data": { "title": "ccc", "desc": "4345" },
-    "additionals": { "odo": "4746", "location": "", "price": "", "notes": "" }
   }
 ]
