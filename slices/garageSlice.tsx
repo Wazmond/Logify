@@ -4,7 +4,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 export interface GarageObject {
   vehUUID: string;
   name: string;
-  car: { 
+  car: {
     year: number;
     make: string;
     model: string;
@@ -13,29 +13,28 @@ export interface GarageObject {
   nickName: string;
 }
 
-type GarageStore = {
-  garage: GarageObject[];
-};
+interface GarageStore {
+  [vehUUID: string]: GarageObject;
+}
 
-const initialState: GarageStore = {
-  garage: [],
-};
+const initialState: GarageStore = {};
 
 export const garageSlice = createSlice({
   name: "garageSlice",
   initialState,
   reducers: {
     addToGarage: (state, action: PayloadAction<GarageObject>) => {
-      state.garage.push(action.payload);
+      const vehUUID = action.payload.vehUUID;
+      state[vehUUID] = action.payload;
     },
     clearGarage: (state) => {
-      state.garage = [];
+      return {};
     },
   },
 });
 
 export const { addToGarage, clearGarage } = garageSlice.actions;
 
-export const garageSelector = (state: RootState) => state.myGarage.garage
+export const garageSelector = (state: RootState) => state.myGarage.garage;
 
 export default garageSlice.reducer;
