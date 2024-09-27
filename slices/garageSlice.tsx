@@ -1,3 +1,4 @@
+import { RootState } from "@/store/store";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface GarageObject {
@@ -33,5 +34,7 @@ export const garageSlice = createSlice({
 });
 
 export const { addToGarage, clearGarage } = garageSlice.actions;
+
+export const garageSelector = (state: RootState) => state.myGarage
 
 export default garageSlice.reducer;
