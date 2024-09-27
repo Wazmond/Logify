@@ -8,15 +8,15 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import "react-native-get-random-values"
+import "react-native-get-random-values";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { GarageObject, addToGarage } from "@/slices/garageSlice";
 import { v4 as uuidv4 } from "uuid";
-import { dispatch } from "@/constants/hooks";
- 
+import { useDispatch } from "react-redux";
+
 const AddMenuPage = () => {
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState("");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [variant, setVariant] = useState("");
@@ -25,6 +25,8 @@ const AddMenuPage = () => {
 
   const router = useRouter();
 
+  const dispatch = useDispatch();
+  
   const handleAddPress = () => {
     const payload: GarageObject = {
       vehUUID: uuidv4(),
@@ -35,7 +37,7 @@ const AddMenuPage = () => {
         model: model,
       },
       rego: rego,
-      nickName: nickname
+      nickName: nickname,
     };
     console.log(payload);
     dispatch(addToGarage(payload));
