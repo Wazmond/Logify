@@ -11,7 +11,7 @@ export interface LogsObject {
     desc: string;
   };
   additionals: {
-    odo: string,
+    odo: string;
     location: string;
     price: string;
     notes: string;
@@ -20,7 +20,7 @@ export interface LogsObject {
 
 export interface LogsState {
   [vehUUID: string]: {
-    [logUUID: string]: LogsObject
+    [logUUID: string]: LogsObject;
   };
 }
 
@@ -30,16 +30,28 @@ export const logsSlice = createSlice({
   name: "logs",
   initialState,
   reducers: {
-    addLog: (state, action: PayloadAction<{ vehUUID: string; log: LogsObject }>) => {
+    addLog: (
+      state,
+      action: PayloadAction<{ vehUUID: string; log: LogsObject }>
+    ) => {
       const { vehUUID, log } = action.payload;
       if (!state[vehUUID]) {
         state[vehUUID] = {};
       }
       state[vehUUID][log.logUUID] = log;
     },
+    editLog: (
+      state,
+      action: PayloadAction<{ vehUUID: string; log: LogsObject }>
+    ) => {
+      const { vehUUID, log } = action.payload;
+      if (state[vehUUID]) {
+        state[vehUUID][log.logUUID] = log;
+      }
+    },
     clearLog: (state) => {
       return {};
-    }
+    },
   },
 });
 
