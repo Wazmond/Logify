@@ -3,7 +3,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface GarageObject {
   vehUUID: string;
-  car: {
+  name: string;
+  car: { 
     year: number;
     make: string;
     model: string;
@@ -35,6 +36,6 @@ export const garageSlice = createSlice({
 
 export const { addToGarage, clearGarage } = garageSlice.actions;
 
-export const garageSelector = (state: RootState) => state.myGarage
+export const garageSelector = (state: RootState) => state.myGarage.garage
 
 export default garageSlice.reducer;
