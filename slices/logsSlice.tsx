@@ -1,3 +1,4 @@
+import { RootState } from "@/store/store";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface LogsObject {
@@ -40,13 +41,19 @@ export const logsSlice = createSlice({
       }
       state[vehUUID][log.logUUID] = log;
     },
-    editLog: (
-      state,
-      action: PayloadAction<{ vehUUID: string; log: LogsObject }>
-    ) => {
-      const { vehUUID, log } = action.payload;
+    editLog: (state, action: PayloadAction<{ log: LogsObject }>) => {
+      const { vehUUID, logUUID } = action.payload.log;
       if (state[vehUUID]) {
-        state[vehUUID][log.logUUID] = log;
+        state[vehUUID][logUUID] = action.payload.log;
+      }
+    },
+    removeLog: (
+      state,
+      action: PayloadAction<{ vehUUID: string; logUUID: number }>
+    ) => {
+      const { vehUUID, logUUID } = action.payload;
+      if (state[vehUUID][logUUID]) {
+        delete state[vehUUID][logUUID];
       }
     },
     clearLog: (state) => {
@@ -55,6 +62,7 @@ export const logsSlice = createSlice({
   },
 });
 
-export const { addLog, clearLog } = logsSlice.actions;
+export const { addLog, clearLog, editLog, removeLog } = logsSlice.actions;
 
+export const logSelector = (state: RootState) => state.logs;
 export default logsSlice.reducer;
