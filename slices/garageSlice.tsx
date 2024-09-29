@@ -13,21 +13,35 @@ export interface GarageObject {
   nickName: string;
 }
 
-interface GarageStore {
+export interface GarageState {
   [vehUUID: string]: GarageObject;
 }
 
-const initialState: GarageStore = {};
+const initialState: GarageState = {};
 
 export const garageSlice = createSlice({
   name: "garageSlice",
   initialState,
   reducers: {
     addToGarage: (state, action: PayloadAction<GarageObject>) => {
-      const vehUUID = action.payload.vehUUID;
-      state[vehUUID] = action.payload;
+      const { vehUUID } = action.payload;
+      if (state[vehUUID]) {
+        state[vehUUID] = action.payload;
+      }
     },
-    clearGarage: (state) => {
+    removeVehicle: (state, action: PayloadAction<{ vehUUID: string }>) => {
+      const { vehUUID } = action.payload
+      if (state[vehUUID]) { 
+        delete state[vehUUID]
+      }
+    },
+    editVehicle: (state, action: PayloadAction<GarageObject> ) => {
+      const { vehUUID } = action.payload
+      if (state[vehUUID]) {
+        state[vehUUID] = action.payload
+      }
+    },
+    clearGarage: () => {
       return {};
     },
   },
@@ -35,6 +49,6 @@ export const garageSlice = createSlice({
 
 export const { addToGarage, clearGarage } = garageSlice.actions;
 
-export const garageSelector = (state: RootState) => state.myGarage.garage;
+export const garageSelector = (state: RootState) => state.myGarage;
 
 export default garageSlice.reducer;

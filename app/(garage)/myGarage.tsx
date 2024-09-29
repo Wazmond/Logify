@@ -13,15 +13,19 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   GarageObject,
+  GarageState,
   clearGarage,
   garageSelector,
 } from "@/slices/garageSlice";
 
 export default function Index() {
   const [addMenu, setAddMenu] = useState(false);
-  const garage: GarageObject[] = useSelector(garageSelector) || [];
-
+  
   const dispatch = useDispatch();
+
+  const garageState: GarageState = useSelector(garageSelector) || {};
+
+  const garage = Object.values(garageState);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,10 +67,10 @@ export default function Index() {
         {garage.length === 0 ? (
           <Text>No vehicles in the garage</Text>
         ) : (
-          garage.map((vehicle, index) => {
+          garage.map((vehicle) => {
             return (
               <TouchableOpacity
-                key={index}
+                key={vehicle.vehUUID}
                 onPress={() =>
                   router.navigate({
                     pathname: "/car/[car]",
@@ -118,7 +122,10 @@ export default function Index() {
           })
         )}
 
-        <Button title="Clear Vehicles" onPress={() => dispatch(clearGarage())} />
+        <Button
+          title="Clear Vehicles"
+          onPress={() => dispatch(clearGarage())}
+        />
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Modal,
   SafeAreaView,
   StyleSheet,
@@ -39,9 +40,14 @@ const AddMenuPage = () => {
       rego: rego,
       nickName: nickname,
     };
-    console.log(payload);
-    dispatch(addToGarage(payload));
-    router.back();
+    
+    try {
+      dispatch(addToGarage(payload));
+      router.back(); // Navigate back
+    } catch (error) {
+      console.error("Error adding vehicle:", error);
+      Alert.alert("Error", "There was a problem adding the vehicle. Please try again.");
+    }
   };
 
   return (
