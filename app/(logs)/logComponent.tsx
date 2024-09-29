@@ -1,19 +1,35 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { SetStateAction, useState } from "react";
+import { Dispatch } from "@reduxjs/toolkit";
+import { LogsObject } from "@/slices/logsSlice";
 
 interface LogComponentProps {
   log: any;
+  setModalStateLD: any;
 }
-const LogComponent: React.FC<LogComponentProps> = ({ log }) => {
-  console.log("log.data : " + log.data)
+
+const LogComponent: React.FC<LogComponentProps> = ({
+  log,
+  setModalStateLD,
+}) => {
   return (
     <View style={styles.container}>
       {/* <View style={styles.timelineView}>
         <View style={styles.timelineDot} />
         <View style={styles.timelineLine} />
       </View> */}
+
       <View style={styles.touchableContainer}>
-        <TouchableOpacity style={styles.logsTouchable}>
+        <TouchableOpacity
+          style={styles.logsTouchable}
+          onPress={() => {
+            console.log("LogComponent Pressed..."),
+              setModalStateLD({
+                state: true,
+                log,
+              });
+          }}
+        >
           <Text style={[styles.title]}>{log.data.title}</Text>
           <Text>{log.data.desc}</Text>
           <Text>
@@ -31,7 +47,6 @@ export default LogComponent;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // borderWidth: 1,
     flex: 1,
   },
   touchableContainer: {

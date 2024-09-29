@@ -16,6 +16,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { LogsObject, addLog } from "@/slices/logsSlice";
 import { Colors } from "@/constants/Colors";
+import { garageSelector } from "@/slices/garageSlice";
 
 interface NewLogModalProps {
   modalState: boolean;
@@ -86,11 +87,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
   const locationRef = useRef<any>(null);
   const notesRef = useRef<any>(null);
 
-  const vehicles: VehicleDropdownItem[] = useSelector(
-    (state: any) => state.myGarage.garage
-  ).map((veh: any) => {
-    return { ...veh, name: `${veh.car.year} ${veh.car.make} ${veh.car.model}` };
-  });
+  const vehicles = Object.values(useSelector(garageSelector));
 
   const label: LabelDropdown[] = [
     { label: "Inspection", value: "Inspection" },
@@ -132,7 +129,6 @@ const LogModal: React.FC<NewLogModalProps> = ({
       presentationStyle="formSheet"
       style={{ backgroundColor: "#F0F0F0" }}
     >
-      {/* <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-200} > */}
       <View style={styles.modalHeader}>
         <TouchableOpacity
           onPress={() => {

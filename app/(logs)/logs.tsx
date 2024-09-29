@@ -9,8 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useState } from "react";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,25 +17,38 @@ import LogModal from "./logModal";
 import VehicleDropdownItem from "@/customTypings";
 import LogComponent from "./logComponent";
 import { LogsObject, LogsState, clearLog } from "@/slices/logsSlice";
+import LogDetails from "./logDetails";
+import { GarageState, garageSelector } from "@/slices/garageSlice";
+
+const logsInitialState: LogsObject = {  
+  logUUID: 0,
+  vehUUID: "",
+  date: "",
+  time: "",
+  label: "",
+  data: {
+    title: "",
+    desc: "",
+  },
+  additionals: {
+    odo: "",
+    location: "",
+    price: "",
+    notes: "",
+  },
+}
 
 const LogsPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("all");
-  const [modalState, setModalState] = useState(false);
+  const [modalStateLD, setModalStateLD] = useState({
+    state: false,
+    log: logsInitialState
+  });
+  const [modalStateNL, setModalStateNL] = useState(false);
+
   const dispatch = useDispatch();
 
-  const vehicles: VehicleDropdownItem[] = [
-    { vehUUID: "all", name: "All Vehicles" },
-    ...useSelector((state: any) => state.myGarage.garage).map((veh: any) => {
-      return {
-        ...veh,
-        name: `${veh.car.year} ${veh.car.make} ${veh.car.model}`,
-      };
-    }),
-  ];
-
-  const handleClearLog = () => {
-    dispatch(clearLog());
-  };
+  const vehicles = Object.values(useSelector(garageSelector));
 
   const logsList = useSelector((state: any) => state.logs);
   const sortedLogsList =
@@ -44,17 +56,10 @@ const LogsPage = () => {
       ? Object.entries(logsList as LogsState)
           .flatMap(([logUUID, logs]) => Object.values(logs))
           .sort((a, b) => Number(b.logUUID) - Number(a.logUUID))
-      : Object.entries(logsList[selectedVehicle] as LogsState || {})
-      .flatMap(([logUUID, log]) => Object.values([log]))
+      : Object.entries((logsList[selectedVehicle] as LogsState) || {})
+          .flatMap(([logUUID, log]) => Object.values([log]))
           .sort((a, b) => Number(b.logUUID) - Number(a.logUUID));
-  // console.log("-----------------------------")
-  // // console.log("logslist.uuid, logslist.log: " + logsList.uuid + " /////// " + logsList.log)
-  // console.log("LogsList : " + JSON.stringify(logsList, null, 2))
-  // console.log("logsList Object.Entries(logsList)   : " + JSON.stringify(Object.entries(logsList), null, 2))
-  // console.log("logsList Object.Entries(logsList).flatmap   : " + JSON.stringify(Object.entries(logsList as LogsState).flatMap(([logUUID, log]) => Object.values(log)), null, 2))
-  // console.log("-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-x-x-x-x-")
-  // console.log("logsList[SelectedVehicle] : " + JSON.stringify(Object.entries(logsList[selectedVehicle] || {}).flatMap(([logUUID, log]) => Object.values([log])), null, 2))
-  // // console.log("sorted logs List: " + sortedLogsList);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
@@ -81,7 +86,7 @@ const LogsPage = () => {
               underlayColor={"#bbbbbb"}
               style={{ borderRadius: 50 }}
               onPress={() => {
-                setModalState(true);
+                setModalStateNL(true);
               }}
             >
               <AntDesign name="plus" size={30} style={styles.icon} />
@@ -101,17 +106,21 @@ const LogsPage = () => {
 
       <ScrollView style={styles.timelineContainer}>
         {sortedLogsList?.map((log, index) => {
-            return (
-              <View key={index}>
-                <LogComponent log={log} />
-              </View>
-            );
-          })}
+          return (
+            <View key={index}>
+              <LogComponent log={log} setModalStateLD={setModalStateLD} />
+
+            </View>
+          );
+        })}
       </ScrollView>
+      <LogModal modalState={modalStateNL} setModalState={setModalStateNL} />
+      <LogDetails
+                modalState={modalStateLD}
+                setModalState={setModalStateLD}
+              />
 
-      <LogModal modalState={modalState} setModalState={setModalState} />
-
-      <Button title="clear log" onPress={handleClearLog} />
+      <Button title="clear log" onPress={() => dispatch(clearLog())} />
     </SafeAreaView>
   );
 };
