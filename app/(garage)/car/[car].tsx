@@ -2,7 +2,7 @@ import { Image, SafeAreaView, StyleSheet, Text, TouchableHighlight, View } from 
 import React, { useLayoutEffect } from "react";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import { useDispatch } from "react-redux";
-import { clearGarage } from "@/slices/garageSlice";
+import { removeVehicle } from "@/slices/garageSlice";
 
 
 const CarPage = () => {
@@ -18,7 +18,7 @@ const CarPage = () => {
 
   const handleRemoveVehicle = () => {
     console.log(clearGarage)
-    dispatch(clearGarage())
+    dispatch(removeVehicle()) /* ADD vehUUID */
   }
 
   return (

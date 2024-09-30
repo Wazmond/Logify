@@ -47,7 +47,7 @@ export const garageSlice = createSlice({
   },
 });
 
-export const { addToGarage, clearGarage } = garageSlice.actions;
+export const { addToGarage, clearGarage, editVehicle, removeVehicle } = garageSlice.actions;
 
 export const garageSelector = (state: RootState) => state.myGarage;
 
