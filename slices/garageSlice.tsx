@@ -25,7 +25,7 @@ export const garageSlice = createSlice({
   reducers: {
     addToGarage: (state, action: PayloadAction<GarageObject>) => {
       const { vehUUID } = action.payload;
-      if (state[vehUUID]) {
+      if (!state[vehUUID]) {
         state[vehUUID] = action.payload;
       }
     },
