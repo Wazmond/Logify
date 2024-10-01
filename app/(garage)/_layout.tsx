@@ -13,7 +13,10 @@ const GarageTab = () => {
         }}
       />
       <Stack.Screen
-        name="car/[car]"
+        name="vehicle/[vehicle]"
+        options={{
+          headerShown: false
+        }}
       />
       <Stack.Screen
       name="addMenuPage"

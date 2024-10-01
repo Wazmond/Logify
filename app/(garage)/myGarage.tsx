@@ -68,13 +68,14 @@ export default function Index() {
           <Text>No vehicles in the garage</Text>
         ) : (
           garage.map((vehicle) => {
+            console.log(`veh : ` + JSON.stringify(vehicle))
             return (
               <TouchableOpacity
                 key={vehicle.vehUUID}
                 onPress={() =>
                   router.navigate({
-                    pathname: "/car/[car]",
-                    params: { car: vehicle.name },
+                    pathname: "/vehicle/[vehicle]",
+                    params: { vehicle: vehicle.vehUUID },
                   })
                 }
                 style={{
