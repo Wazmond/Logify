@@ -43,6 +43,7 @@ const AddMenuPage = () => {
     
     try {
       dispatch(addToGarage(payload));
+      console.log("adding to garage : " + JSON.stringify(payload))
       router.back(); // Navigate back
     } catch (error) {
       console.error("Error adding vehicle:", error);
