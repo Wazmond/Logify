@@ -109,7 +109,6 @@ const LogsPage = () => {
           return (
             <View key={index}>
               <LogComponent log={log} setModalStateLD={setModalStateLD} />
-
             </View>
           );
         })}

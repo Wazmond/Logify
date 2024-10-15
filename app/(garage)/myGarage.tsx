@@ -20,7 +20,7 @@ import {
 
 export default function Index() {
   const [addMenu, setAddMenu] = useState(false);
-  
+
   const dispatch = useDispatch();
 
   const garageState: GarageState = useSelector(garageSelector) || {};
@@ -60,15 +60,26 @@ export default function Index() {
       <ScrollView
         style={{
           marginTop: 10,
-          marginHorizontal: 60,
+          paddingHorizontal: 60,
         }}
         showsVerticalScrollIndicator={false}
       >
         {garage.length === 0 ? (
-          <Text>No vehicles in the garage</Text>
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 25,
+              justifyContent: "center",
+            }}
+          >
+            <Link href="./addMenuPage">
+              <Text style={{ textAlign: "center", margin: 20 }}>
+                Add a vehicle to get started
+              </Text>
+            </Link>
+          </View>
         ) : (
           garage.map((vehicle) => {
-            console.log(`veh : ` + JSON.stringify(vehicle))
             return (
               <TouchableOpacity
                 key={vehicle.vehUUID}

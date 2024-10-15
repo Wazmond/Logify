@@ -5,14 +5,46 @@ export interface GarageObject {
   vehUUID: string;
   name: string;
   car: {
-    year: number;
+    year: string;
     make: string;
     model: string;
+    variant: string;
   };
   rego: string;
   nickName: string;
+  modifications: {
+    body: string[],
+    braking: string[],
+    drivetrain: string[],
+    electricals: string[],
+    engine: string[],
+    interior: string[],
+    suspension: string[],
+    wheels: string[],
+  };
 }
-
+export const initialGarageObject: GarageObject = {
+  vehUUID: "",
+  name: "",
+  car: {
+    year: "",
+    make: "",
+    model: "",
+    variant: "",
+  },
+  rego: "",
+  nickName: "",
+  modifications: {
+    body: [],
+    braking: [],
+    drivetrain: [],
+    electricals: [],
+    engine: [],
+    interior: [],
+    suspension: [],
+    wheels: [],
+  },
+}
 export interface GarageState {
   [vehUUID: string]: GarageObject;
 }
@@ -41,9 +73,7 @@ export const garageSlice = createSlice({
         state[vehUUID] = action.payload
       }
     },
-    clearGarage: () => {
-      return {};
-    },
+    clearGarage: () => initialState
   },
 });
 

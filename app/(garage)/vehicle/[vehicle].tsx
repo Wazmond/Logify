@@ -1,4 +1,5 @@
 import {
+  Button,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -21,30 +22,18 @@ import {
   GarageState,
   editVehicle,
   garageSelector,
+  initialGarageObject,
   removeVehicle,
 } from "@/slices/garageSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const initVehicleState = {
-  vehUUID: "",
-  name: "",
-  car: {
-    year: 0,
-    make: "",
-    model: "",
-  },
-  rego: "",
-  nickName: "",
-};
 const CarPage = () => {
-  const [form, setForm] = useState<GarageObject>(initVehicleState);
+  const [form, setForm] = useState<GarageObject>(initialGarageObject);
   const [editable, setEditable] = useState(false);
 
   const { vehicle } = useLocalSearchParams();
   const vehUUID = vehicle as string;
   const router = useRouter();
-
-  const navigation = useNavigation();
 
   const dispatch = useDispatch();
 
@@ -73,7 +62,7 @@ const CarPage = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            editable && dispatch(editVehicle(form));
+            editable && console.log("Saving form"), dispatch(editVehicle(form));
             setEditable(!editable);
           }}
         >
@@ -93,7 +82,8 @@ const CarPage = () => {
 
       <View style={styles.buttonContainer}>
         <View>
-          <Text>Edit vehicle details</Text>
+          <Text>{veh?.name}</Text>
+          <Text>{veh?.rego}</Text>
         </View>
         <View>
           <Text>Vehicle Logs</Text>
@@ -101,9 +91,7 @@ const CarPage = () => {
         <Text style={styles.text}>CarPage, params: {veh?.name}</Text>
       </View>
       <View>
-        <TouchableHighlight onPress={handleRemoveVehicle}>
-          <Text>REMOVE</Text>
-        </TouchableHighlight>
+        <Button title="Remove Vehicle" onPress={handleRemoveVehicle} />
       </View>
     </SafeAreaView>
   );

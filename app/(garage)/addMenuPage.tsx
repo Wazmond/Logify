@@ -11,43 +11,41 @@ import {
 import React, { useState } from "react";
 import "react-native-get-random-values";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { GarageObject, addToGarage } from "@/slices/garageSlice";
+import { Link, useRouter } from "expo-router";
+import {
+  GarageObject,
+  addToGarage,
+  initialGarageObject,
+} from "@/slices/garageSlice";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from "react-redux";
+import ModalPage from "./modalPage";
 
 const AddMenuPage = () => {
-  const [year, setYear] = useState("");
-  const [make, setMake] = useState("");
-  const [model, setModel] = useState("");
-  const [variant, setVariant] = useState("");
-  const [rego, setRego] = useState("");
-  const [nickname, setNickname] = useState("");
-
+  const [form, setForm] = useState<GarageObject>(initialGarageObject);
+  const [modalState, setModalState] = useState<boolean>(false)
+ 
   const router = useRouter();
 
   const dispatch = useDispatch();
-  
+
   const handleAddPress = () => {
     const payload: GarageObject = {
+      ...form,
       vehUUID: uuidv4(),
-      name: `${year} ${make} ${model}`,
-      car: {
-        year: parseInt(year, 10),
-        make: make,
-        model: model,
-      },
-      rego: rego,
-      nickName: nickname,
+      name: `${form.car.year} ${form.car.make} ${form.car.model}`,
     };
-    
+
     try {
       dispatch(addToGarage(payload));
-      console.log("adding to garage : " + JSON.stringify(payload))
+      console.log("adding to garage : " + JSON.stringify(payload));
       router.back(); // Navigate back
     } catch (error) {
       console.error("Error adding vehicle:", error);
-      Alert.alert("Error", "There was a problem adding the vehicle. Please try again.");
+      Alert.alert(
+        "Error",
+        "There was a problem adding the vehicle. Please try again."
+      );
     }
   };
 
@@ -80,62 +78,99 @@ const AddMenuPage = () => {
           </TouchableHighlight>
         </View>
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Year"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            inputMode="numeric"
-            value={year}
-            onChangeText={setYear}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Make"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            autoCapitalize="characters"
-            value={make}
-            onChangeText={setMake}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Model"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            autoCapitalize="characters"
-            value={model}
-            onChangeText={setModel}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Variant"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            autoCapitalize="characters"
-            value={variant}
-            onChangeText={setVariant}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Rego"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            autoCapitalize="characters"
-            value={rego}
-            onChangeText={setRego}
-            maxLength={9}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Nickname"
-            placeholderTextColor={"#bbbbbb"}
-            textAlign="center"
-            autoCapitalize="characters"
-            value={nickname}
-            onChangeText={setNickname}
-          />
+          <View style={styles.inputSection}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Year"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              inputMode="numeric"
+              value={form.car.year}
+              maxLength={4}
+              onChangeText={(e) =>
+                setForm({ ...form, car: { ...form.car, year: e } })
+              }
+            />
+            <TextInput
+              style={[styles.input, { flex: 3 }]}
+              placeholder="Make e.g Toyota"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              autoCapitalize="characters"
+              value={form.car.make}
+              onChangeText={(e) =>
+                setForm({ ...form, car: { ...form.car, make: e } })
+              }
+            />
+          </View>
+          <View style={styles.inputSection}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Model e.g Corolla"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              autoCapitalize="characters"
+              value={form.car.model}
+              onChangeText={(e) =>
+                setForm({ ...form, car: { ...form.car, model: e } })
+              }
+            />
+          </View>
+          <View style={styles.inputSection}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Variant e.g GR"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              autoCapitalize="characters"
+              value={form.car.variant}
+              onChangeText={(e) =>
+                setForm({ ...form, car: { ...form.car, variant: e } })
+              }
+            />
+          </View>
+          <View style={styles.inputSection}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Rego e.g 123ABC"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              autoCapitalize="characters"
+              value={form.rego}
+              onChangeText={(e) => setForm({ ...form, rego: e })}
+              maxLength={9}
+            />
+          </View>
+          <View style={styles.inputSection}>
+            <TextInput
+              style={[styles.input, { flex: 1 }]}
+              placeholder="Nickname"
+              placeholderTextColor={"#bbbbbb"}
+              textAlign="center"
+              autoCapitalize="characters"
+              value={form.nickName}
+              onChangeText={(e) => setForm({ ...form, nickName: e })}
+            />
+          </View>
+          <TouchableHighlight
+            underlayColor={"#bbbbbb"}
+            style={{
+              borderRadius: 10,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              backgroundColor: "#fff",
+              flex: 1,
+              marginTop: 20,
+            }}
+            onPress={() => setModalState(true)}
+          >
+              <View>
+                <Text>Modified or Personalised?</Text>
+                <Text>Press here!</Text>
+              </View>
+          </TouchableHighlight>
         </View>
+        <ModalPage modalState={modalState} setModalState={setModalState} form={form} setForm={setForm}/>
       </View>
     </SafeAreaView>
   );
@@ -158,7 +193,7 @@ const styles = StyleSheet.create({
   },
   addVehicleButton: {
     backgroundColor: "#0E7AFE",
-    borderRadius: 50,
+    borderRadius: 13,
     paddingVertical: 4,
     paddingHorizontal: 6,
     marginLeft: "auto",
@@ -171,11 +206,16 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 20,
     paddingHorizontal: 20,
+    flexWrap: "wrap",
+    flexDirection: "row",
+  },
+  inputSection: {
+    flexDirection: "row",
+    width: "100%",
   },
   input: {
     height: 40,
-    marginVertical: 5,
-    // borderWidth: 1,
+    margin: 5,
     padding: 10,
     borderRadius: 10,
     fontSize: 20,
