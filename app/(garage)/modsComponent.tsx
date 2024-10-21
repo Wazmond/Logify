@@ -6,38 +6,29 @@ import {
   View,
 } from "react-native";
 import React, { SetStateAction, useEffect, useState } from "react";
-import { modsOpenState } from "./modalPage";
 import { GarageObject } from "@/slices/garageSlice";
+import { useForm } from "@/constants/hooks";
 
 interface props {
   property: keyof GarageObject["modifications"];
   setIsOpen: React.Dispatch<React.SetStateAction<string>>;
   isOpen: string;
-  setForm: React.Dispatch<React.SetStateAction<GarageObject>>;
-  form: GarageObject;
 }
 
 const ModsComponent: React.FC<props> = ({
   property,
   setIsOpen,
   isOpen,
-  setForm,
-  form,
 }) => {
-  const [listItem, setListItem] = useState("");
+  const [ inputValue, setInputValue ] = useState("")
+  const { form, setForm } = useForm()
 
   const handleTextSubmit = () => {
-    if (listItem.trim() === "") return;
-    setForm((prevForm) => ({
-      ...prevForm,
-      modifications: {
-        ...prevForm.modifications,
-        [property]: [...(prevForm.modifications[property] || []), listItem],
-      },
-    }));
-    setListItem("");
-  };
-  console.log(JSON.stringify(form));
+    inputValue && setForm({...form, modifications: {...form.modifications, 
+    [property]: [...form.modifications[property] || [], inputValue]}})
+    setInputValue("")
+  }
+
   return (
     <View style={styles.component}>
       <TouchableOpacity
@@ -49,7 +40,6 @@ const ModsComponent: React.FC<props> = ({
           <Text style={styles.title}>{property}</Text>
           {isOpen === property && (
             <View>
-              <Text>isOpen is set to property(${property})</Text>
               {form.modifications[property]?.length > 0 &&
                 form.modifications[property].map((value, index) => (
                   <View key={index}>
@@ -58,11 +48,11 @@ const ModsComponent: React.FC<props> = ({
                 ))}
               <TextInput
                 placeholder="Enter details..."
-                value={listItem}
+                value={inputValue}
                 onChangeText={(e) => {
-                  setListItem(e);
+                  setInputValue(e)
                 }}
-                onSubmitEditing={handleTextSubmit}
+                onSubmitEditing={() => handleTextSubmit()}
               />
             </View>
           )}

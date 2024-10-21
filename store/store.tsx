@@ -13,15 +13,18 @@ import {
 // import storage from "redux-persist/lib/storage"; // Local storage for web
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import logsSlice from "@/slices/logsSlice";
+import formSlice from "@/slices/formSlice";
 
 const persistConfig = {
   key: "root",
-  storage: AsyncStorage
+  storage: AsyncStorage,
+  blacklist: ['form']
 };
 
 const reducers = combineReducers({
   myGarage: garageSlice,
   logs: logsSlice,
+  form: formSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

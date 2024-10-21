@@ -15,9 +15,8 @@ import ModsComponent from "./modsComponent";
 interface Props {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
-  form: GarageObject;
-  setForm: React.Dispatch<React.SetStateAction<GarageObject>>;
 }
+
 export const modsOpenState = {
   body: false,
   braking: false,
@@ -32,8 +31,6 @@ export const modsOpenState = {
 const ModalPage: React.FC<Props> = ({
   modalState,
   setModalState,
-  form,
-  setForm,
 }) => {
   const [isOpen, setIsOpen] = useState("");
 
@@ -63,57 +60,41 @@ const ModalPage: React.FC<Props> = ({
           property={"body"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"braking"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"drivetrain"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"electricals"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"engine"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"interior"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"suspension"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
         <ModsComponent
           property={"wheels"}
           setIsOpen={setIsOpen}
           isOpen={isOpen}
-          setForm={setForm}
-          form={form}
         />
       </ScrollView>
       <Text>Modal Page</Text>

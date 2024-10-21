@@ -18,11 +18,13 @@ import {
   initialGarageObject,
 } from "@/slices/garageSlice";
 import { v4 as uuidv4 } from "uuid";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalPage from "./modalPage";
+import { useForm } from "@/constants/hooks";
 
 const AddMenuPage = () => {
-  const [form, setForm] = useState<GarageObject>(initialGarageObject);
+  const { form, setForm } = useForm()
+  
   const [modalState, setModalState] = useState<boolean>(false)
  
   const router = useRouter();
@@ -46,7 +48,7 @@ const AddMenuPage = () => {
         "Error",
         "There was a problem adding the vehicle. Please try again."
       );
-    }
+    } 
   };
 
   return (
@@ -170,7 +172,7 @@ const AddMenuPage = () => {
               </View>
           </TouchableHighlight>
         </View>
-        <ModalPage modalState={modalState} setModalState={setModalState} form={form} setForm={setForm}/>
+        <ModalPage modalState={modalState} setModalState={setModalState}/>
       </View>
     </SafeAreaView>
   );
