@@ -58,10 +58,7 @@ export default function Index() {
       </View>
 
       <ScrollView
-        style={{
-          marginTop: 10,
-          paddingHorizontal: 60,
-        }}
+        style={styles.garageContainer}
         showsVerticalScrollIndicator={false}
       >
         {garage.length === 0 ? (
@@ -99,7 +96,6 @@ export default function Index() {
                     borderColor: "#555555",
                     borderRadius: 25,
                     paddingVertical: 10,
-                    height: 100,
                     backgroundColor: "#ffffff",
                   }}
                 >
@@ -113,6 +109,7 @@ export default function Index() {
                     <Text
                       style={{
                         fontSize: 22,
+                        textAlign: 'center'
                       }}
                     >
                       {vehicle.name}
@@ -125,7 +122,7 @@ export default function Index() {
                         marginTop: "auto",
                       }}
                     >
-                      {vehicle.rego ? vehicle.rego : vehicle.nickName}
+                      {vehicle.rego ? vehicle.rego : (vehicle.nickName || "")}
                     </Text>
                   </View>
                 </View>
@@ -146,5 +143,9 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     // flexDirection
+  },
+  garageContainer: {
+    marginTop: 10,
+    paddingHorizontal: 60,
   },
 });
