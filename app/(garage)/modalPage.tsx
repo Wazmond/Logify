@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   componentsContainer: {
-    paddingHorizontal: 60,
+    paddingHorizontal: 20,
     backgroundColor: "#f0f0f0",
   },
 });
