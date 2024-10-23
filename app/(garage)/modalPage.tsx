@@ -50,8 +50,8 @@ const ModalPage: React.FC<Props> = ({
             <Feather name="x" size={30} style={styles.closeIcon} />
           </TouchableOpacity>
         </View>
-        <View>
-          <Text>Modifications and changes</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Modifications and changes</Text>
         </View>
       </View>
 
@@ -97,7 +97,6 @@ const ModalPage: React.FC<Props> = ({
           isOpen={isOpen}
         />
       </ScrollView>
-      <Text>Modal Page</Text>
     </Modal>
   );
 };
@@ -106,6 +105,13 @@ export default ModalPage;
 
 const styles = StyleSheet.create({
   modalPage: { backgroundColor: "#f0f0f0" },
+  titleContainer: {
+
+  },
+  titleText: {
+    fontSize: 20,
+    // fontWeight: 'bold'
+  },
   headerContainer: {
     padding: 10,
     justifyContent: "space-between",
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   componentsContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
     backgroundColor: "#f0f0f0",
   },
 });
