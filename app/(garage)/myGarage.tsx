@@ -51,9 +51,15 @@ export default function Index() {
         <View
           style={{ borderRadius: 50, backgroundColor: "#ffffff", padding: 5 }}
         >
-          <Link href="./addMenuPage">
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate({
+                pathname: "/addMenuPage",
+              })
+            }
+          >
             <AntDesign name="plus" size={30} style={{ borderRadius: 50 }} />
-          </Link>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -92,7 +98,6 @@ export default function Index() {
               >
                 <View
                   style={{
-                    // borderWidth: 1,
                     borderColor: "#555555",
                     borderRadius: 25,
                     paddingVertical: 10,
@@ -109,7 +114,7 @@ export default function Index() {
                     <Text
                       style={{
                         fontSize: 22,
-                        textAlign: 'center'
+                        textAlign: "center",
                       }}
                     >
                       {vehicle.name}
@@ -122,7 +127,7 @@ export default function Index() {
                         marginTop: "auto",
                       }}
                     >
-                      {vehicle.rego ? vehicle.rego : (vehicle.nickName || "")}
+                      {vehicle.rego ? vehicle.rego : vehicle.nickName || ""}
                     </Text>
                   </View>
                 </View>
