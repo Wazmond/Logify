@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "react-native-get-random-values";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
@@ -23,10 +23,17 @@ import ModalPage from "./modalPage";
 import { useForm } from "@/constants/hooks";
 
 const AddMenuPage = () => {
-  const { form, setForm } = useForm()
-  
-  const [modalState, setModalState] = useState<boolean>(false)
- 
+  const { form, setForm } = useForm();
+
+  const [modalState, setModalState] = useState<boolean>(false);
+
+  const yearRef = useRef<TextInput | null>(null);
+  const makeRef = useRef<TextInput | null>(null);
+  const modelRef = useRef<TextInput | null>(null);
+  const variantRef = useRef<TextInput | null>(null);
+  const regoRef = useRef<TextInput | null>(null);
+  const nickRef = useRef<TextInput | null>(null);
+
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -48,7 +55,12 @@ const AddMenuPage = () => {
         "Error",
         "There was a problem adding the vehicle. Please try again."
       );
-    } 
+    }
+  };
+
+  const handleAddPhotos = () => {
+    const x = null;
+    return x;
   };
 
   return (
@@ -92,6 +104,8 @@ const AddMenuPage = () => {
               onChangeText={(e) =>
                 setForm({ ...form, car: { ...form.car, year: e } })
               }
+              onSubmitEditing={() => makeRef.current?.focus()}
+              returnKeyType="done"
             />
             <TextInput
               style={[styles.input, { flex: 3 }]}
@@ -103,6 +117,8 @@ const AddMenuPage = () => {
               onChangeText={(e) =>
                 setForm({ ...form, car: { ...form.car, make: e } })
               }
+              onSubmitEditing={() => modelRef.current?.focus()}
+              ref={makeRef}
             />
           </View>
           <View style={styles.inputSection}>
@@ -116,6 +132,8 @@ const AddMenuPage = () => {
               onChangeText={(e) =>
                 setForm({ ...form, car: { ...form.car, model: e } })
               }
+              onSubmitEditing={() => variantRef.current?.focus()}
+              ref={modelRef}
             />
           </View>
           <View style={styles.inputSection}>
@@ -129,6 +147,8 @@ const AddMenuPage = () => {
               onChangeText={(e) =>
                 setForm({ ...form, car: { ...form.car, variant: e } })
               }
+              onSubmitEditing={() => regoRef.current?.focus()}
+              ref={variantRef}
             />
           </View>
           <View style={styles.inputSection}>
@@ -141,6 +161,8 @@ const AddMenuPage = () => {
               value={form.rego}
               onChangeText={(e) => setForm({ ...form, rego: e })}
               maxLength={9}
+              onSubmitEditing={() => nickRef.current?.focus()}
+              ref={regoRef}
             />
           </View>
           <View style={styles.inputSection}>
@@ -152,27 +174,33 @@ const AddMenuPage = () => {
               autoCapitalize="characters"
               value={form.nickName}
               onChangeText={(e) => setForm({ ...form, nickName: e })}
+              ref={nickRef}
             />
           </View>
           <TouchableHighlight
-            underlayColor={"#bbbbbb"}
-            style={{
-              borderRadius: 10,
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              backgroundColor: "#fff",
-              flex: 1,
-              marginTop: 20,
-            }}
+            underlayColor={"#bbb"}
+            style={styles.bigButtons}
             onPress={() => setModalState(true)}
           >
-              <View>
-                <Text>Modified or Personalised?</Text>
-                <Text>Press here!</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text>Modified or Personalised?</Text>
+              <Text>Press here!</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={"#bbb"}
+            style={styles.bigButtons}
+            onPress={() => handleAddPhotos()}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text>Want to add a photo?</Text>
+              <View style={styles.photoButtonIcon}>
+                <MaterialIcons size={30} name="photo" color="#FFF" />
               </View>
+            </View>
           </TouchableHighlight>
         </View>
-        <ModalPage modalState={modalState} setModalState={setModalState}/>
+        <ModalPage modalState={modalState} setModalState={setModalState} />
       </View>
     </SafeAreaView>
   );
@@ -222,5 +250,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 20,
     backgroundColor: "#ffffff",
+  },
+  bigButtons: {
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#fff",
+    marginTop: 20,
+    width: "100%",
+  },
+  photoButtonIcon: {
+    backgroundColor: "#A0A0A0",
+    borderRadius: 50,
+    padding: 10,
+    marginTop: 10,
   },
 });
