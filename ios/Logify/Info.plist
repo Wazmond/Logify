@@ -82,5 +82,11 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Logify would like access to your photo library</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Logify would like to use your camera</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Logify would like to use your microphone</string>
   </dict>
 </plist>
