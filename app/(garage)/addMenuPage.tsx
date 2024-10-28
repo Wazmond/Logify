@@ -21,11 +21,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import ModalPage from "./modalPage";
 import { useForm } from "@/constants/hooks";
+import ImagePickerComponent from "@/components/imagePicker";
 
 const AddMenuPage = () => {
   const { form, setForm } = useForm();
-
-  const [modalState, setModalState] = useState<boolean>(false);
+  const [ imgState, setImgState ] = useState<boolean>(false)
+  const [ modalState, setModalState ] = useState<boolean>(false);
 
   const yearRef = useRef<TextInput | null>(null);
   const makeRef = useRef<TextInput | null>(null);
@@ -58,7 +59,7 @@ const AddMenuPage = () => {
     }
   };
 
-  const handleAddPhotos = () => {
+  const launchImagePicker = () => {
     const x = null;
     return x;
   };
@@ -190,7 +191,7 @@ const AddMenuPage = () => {
           <TouchableHighlight
             underlayColor={"#bbb"}
             style={styles.bigButtons}
-            onPress={() => handleAddPhotos()}
+            onPress={() => setImgState(true)}
           >
             <View style={{ alignItems: "center" }}>
               <Text>Want to add a photo?</Text>
@@ -199,6 +200,7 @@ const AddMenuPage = () => {
               </View>
             </View>
           </TouchableHighlight>
+          <ImagePickerComponent imgState={imgState} setImgState={setImgState}/> 
         </View>
         <ModalPage modalState={modalState} setModalState={setModalState} />
       </View>
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   photoButtonIcon: {
-    backgroundColor: "#A0A0A0",
+    backgroundColor: "#bbb",
     borderRadius: 50,
     padding: 10,
     marginTop: 10,
