@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useRef, useState } from "react";
@@ -23,11 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalPage from "./modalPage";
 import { useForm } from "@/constants/hooks";
 import ImagePickerComponent from "@/components/imagePicker";
+import ClearModalComponent from "./clearModal";
 
 const AddMenuPage = () => {
   const { form, setForm } = useForm();
-  const [ imgState, setImgState ] = useState<boolean>(false)
-  const [ modalState, setModalState ] = useState<boolean>(false);
+  const [imgState, setImgState] = useState<boolean>(false);
+  const [modalState, setModalState] = useState<boolean>(false);
+  const [clearState, setClearState] = useState<boolean>(false);
 
   const yearRef = useRef<TextInput | null>(null);
   const makeRef = useRef<TextInput | null>(null);
@@ -60,11 +63,6 @@ const AddMenuPage = () => {
     }
   };
 
-  const launchImagePicker = () => {
-    const x = null;
-    return x;
-  };
-
   return (
     <SafeAreaView>
       <View style={styles.screenContainer}>
@@ -94,7 +92,7 @@ const AddMenuPage = () => {
           </TouchableHighlight>
         </View>
         <View style={styles.inputContainer}>
-          <View style={styles.inputSection}>
+          <View style={[styles.inputSection, { gap: 10 }]}>
             <TextInput
               style={[styles.input, { flex: 1 }]}
               placeholder="Year"
@@ -196,19 +194,23 @@ const AddMenuPage = () => {
           >
             <View style={{ alignItems: "center" }}>
               <Text>Want to add a photo?</Text>
-              { form.imageUri ? (
+              <Text>Press here!</Text>
+              {form.imageUri ? (
                 <View>
                   <Image style={styles.image} src={form.imageUri} />
                 </View>
               ) : (
-              <View style={styles.photoButtonIcon}>
-                <MaterialIcons size={30} name="photo" color="#FFF" />
-              </View> 
+                <View style={styles.photoButtonIcon}>
+                  <MaterialIcons size={30} name="photo" color="#FFF" />
+                </View>
               )}
-
             </View>
           </TouchableHighlight>
-          <ImagePickerComponent imgState={imgState} setImgState={setImgState}/> 
+          <TouchableOpacity style={styles.clearTouchable} onPress={() => setClearState(true)}>
+            <Text style={styles.clearText}>Clear Form</Text>
+          </TouchableOpacity>
+          <ClearModalComponent clearState={clearState} setClearState={setClearState} />
+          <ImagePickerComponent imgState={imgState} setImgState={setImgState} />
         </View>
         <ModalPage modalState={modalState} setModalState={setModalState} />
       </View>
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    margin: 5,
+    marginVertical: 5,
     padding: 10,
     borderRadius: 10,
     fontSize: 20,
@@ -266,7 +268,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: "#fff",
-    marginTop: 20,
+    marginVertical: 5,
     width: "100%",
   },
   photoButtonIcon: {
@@ -278,7 +280,20 @@ const styles = StyleSheet.create({
   image: {
     marginTop: 10,
     borderRadius: 10,
-    height: 210,
-    width: 280,
+    height: 195,
+    width: 260,
+  },
+  clearTouchable: {
+    marginTop: 20,
+    borderWidth: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginHorizontal: 'auto'
+  },
+  clearText: {
+    color: "rgba(255,00,00)",
+    fontSize: 18,
+    textAlign: "center",
   },
 });
