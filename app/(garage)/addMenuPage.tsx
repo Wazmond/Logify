@@ -286,13 +286,15 @@ const styles = StyleSheet.create({
   clearTouchable: {
     marginTop: 20,
     borderWidth: 1,
+    borderColor: '#bbb',
+    backgroundColor: '#fff',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
     marginHorizontal: 'auto'
   },
   clearText: {
-    color: "rgba(255,00,00)",
+    color: '#ff0000',
     fontSize: 18,
     textAlign: "center",
   },
