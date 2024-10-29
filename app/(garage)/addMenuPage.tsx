@@ -1,5 +1,6 @@
 import {
   Alert,
+  Image,
   Modal,
   SafeAreaView,
   StyleSheet,
@@ -195,9 +196,16 @@ const AddMenuPage = () => {
           >
             <View style={{ alignItems: "center" }}>
               <Text>Want to add a photo?</Text>
+              { form.imageUri ? (
+                <View>
+                  <Image style={styles.image} src={form.imageUri} />
+                </View>
+              ) : (
               <View style={styles.photoButtonIcon}>
                 <MaterialIcons size={30} name="photo" color="#FFF" />
-              </View>
+              </View> 
+              )}
+
             </View>
           </TouchableHighlight>
           <ImagePickerComponent imgState={imgState} setImgState={setImgState}/> 
@@ -266,5 +274,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 10,
     marginTop: 10,
+  },
+  image: {
+    marginTop: 10,
+    borderRadius: 10,
+    height: 210,
+    width: 280,
   },
 });

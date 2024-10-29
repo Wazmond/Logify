@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useForm } from "@/constants/hooks";
 
 interface imagePickerComponentProps {
   imgState: boolean;
@@ -21,30 +22,11 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
   setImgState,
 }) => {
   const [selectedImage, setSelectedImage] = useState("");
+  const { form, setForm } = useForm();
 
   const libraryPermission = () => {
     const permission = ImagePicker.getMediaLibraryPermissionsAsync();
   };
-
-  // const launchImagePicker = () => {
-  //   const options: ImageLibraryOptions = {
-  //     mediaType: "photo",
-  //     includeBase64: false,
-  //     quality: 1,
-  //   };
-
-  //   ImagePicker.launchImageLibraryAsync(options, (response) => {
-  //     if (response.didCancel) {
-  //       console.log("User cancelled image picker");
-  //     } else if (response.errorCode) {
-  //       console.log("Image picker error: ", response.errorMessage);
-  //       Alert.alert("Error", response.errorMessage);
-  //     } else {
-  //       let imageUri = response.assets?.[0]?.uri || "";
-  //       setSelectedImage(imageUri);
-  //     }
-  //   });
-  // };
 
   const libraryPicker = async () => {
     let image = await ImagePicker.launchImageLibraryAsync({
@@ -62,6 +44,7 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
   };
 
   const handleImageSave = () => { 
+    setForm({...form, imageUri: selectedImage})
     setImgState(false)
    }
 
@@ -155,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonView: {
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#bbb",
   },
   buttonText: {
