@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalPage from "./modalPage";
 import { useForm } from "@/constants/hooks";
 import ImagePickerComponent from "@/components/imagePicker";
-import ClearModalComponent from "./clearModal";
+import ClearModalComponent from "@/components/clearModal";
 
 const AddMenuPage = () => {
   const { form, setForm } = useForm();
