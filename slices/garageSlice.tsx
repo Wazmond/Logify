@@ -13,15 +13,16 @@ export interface GarageObject {
   rego: string;
   nickName: string;
   modifications: {
-    body: string[],
-    braking: string[],
-    drivetrain: string[],
-    electricals: string[],
-    engine: string[],
-    interior: string[],
-    suspension: string[],
-    wheels: string[],
+    body: string[];
+    braking: string[];
+    drivetrain: string[];
+    electricals: string[];
+    engine: string[];
+    interior: string[];
+    suspension: string[];
+    wheels: string[];
   };
+  imageUri: string;
 }
 export const initialGarageObject: GarageObject = {
   vehUUID: "",
@@ -44,7 +45,8 @@ export const initialGarageObject: GarageObject = {
     suspension: [],
     wheels: [],
   },
-}
+  imageUri: "",
+};
 export interface GarageState {
   [vehUUID: string]: GarageObject;
 }
@@ -62,22 +64,23 @@ export const garageSlice = createSlice({
       }
     },
     removeVehicle: (state, action: PayloadAction<{ vehUUID: string }>) => {
-      const { vehUUID } = action.payload
-      if (state[vehUUID]) { 
-        delete state[vehUUID]
-      }
-    },
-    editVehicle: (state, action: PayloadAction<GarageObject> ) => {
-      const { vehUUID } = action.payload
+      const { vehUUID } = action.payload;
       if (state[vehUUID]) {
-        state[vehUUID] = action.payload
+        delete state[vehUUID];
       }
     },
-    clearGarage: () => initialState
+    editVehicle: (state, action: PayloadAction<GarageObject>) => {
+      const { vehUUID } = action.payload;
+      if (state[vehUUID]) {
+        state[vehUUID] = action.payload;
+      }
+    },
+    clearGarage: () => initialState,
   },
 });
 
-export const { addToGarage, clearGarage, editVehicle, removeVehicle } = garageSlice.actions;
+export const { addToGarage, clearGarage, editVehicle, removeVehicle } =
+  garageSlice.actions;
 
 export const garageSelector = (state: RootState) => state.myGarage;
 
