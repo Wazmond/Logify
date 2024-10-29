@@ -36,7 +36,6 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
     });
     !image.canceled && setSelectedImage(image.assets[0].uri);
-    console.log(selectedImage);
   };
 
   const launchCameraPicker = async () => {
