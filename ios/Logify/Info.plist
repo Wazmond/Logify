@@ -43,8 +43,15 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Logify would like to use your camera</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Logify would like to use your microphone</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Logify would like access to your photo library</string>
     <key>NSUserActivityTypes</key>
     <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
@@ -82,11 +89,5 @@
     <string>Automatic</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Logify would like access to your photo library</string>
-    <key>NSCameraUsageDescription</key>
-    <string>Logify would like to use your camera</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Logify would like to use your microphone</string>
   </dict>
 </plist>
