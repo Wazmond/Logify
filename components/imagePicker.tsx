@@ -24,28 +24,50 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
   const [selectedImage, setSelectedImage] = useState("");
   const { form, setForm } = useForm();
 
-  const libraryPermission = () => {
-    const permission = ImagePicker.getMediaLibraryPermissionsAsync();
-  };
-
   const libraryPicker = async () => {
-    let image = await ImagePicker.launchImageLibraryAsync({
-      selectionLimit: 1,
-      aspect: [4, 3],
-      quality: 1,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    });
-    !image.canceled && setSelectedImage(image.assets[0].uri);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!status) {
+      Alert.alert(
+        "No access to photos, please allow access in settings (Settings -> Privacy and Security -> Photos -> Logify -> All Photos)"
+      );
+    } else {
+      try {
+        let image = await ImagePicker.launchImageLibraryAsync({
+          selectionLimit: 1,
+          quality: 1,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+        !image?.canceled && ( setSelectedImage(image.assets[0].uri), Alert.alert("Size of image HxW: " + image.assets[0].height + ' x ' + image.assets[0].width))
+
+      } catch (error) {
+        console.log("libaryPicker error: " + error);
+      }
+    }
   };
 
-  const launchCameraPicker = async () => {
-    return null
+  const cameraPicker = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (!status) {
+      Alert.alert(
+        "No access to camera, please allow access in settings (Settings -> Privacy and Security -> Camera and enable for Logify)"
+      );
+    } else {
+      try {
+        let image = await ImagePicker.launchCameraAsync({
+          quality: 1,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+        !image.canceled && setSelectedImage(image.assets[0].uri);
+      } catch (error) {
+        console.log("image picker error : " + error);
+      }
+    }
   };
 
-  const handleImageSave = () => { 
-    setForm({...form, imageUri: selectedImage})
-    setImgState(false)
-   }
+  const handleImageSave = () => {
+    setForm({ ...form, imageUri: selectedImage });
+    setImgState(false);
+  };
 
   return (
     <Modal
@@ -62,7 +84,7 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
               <Text style={styles.title}>Add an Image</Text>
 
               {selectedImage && (
-                <View style={{alignItems: 'center'}}>
+                <View style={{ alignItems: "center" }}>
                   <View style={styles.imageView}>
                     <Image
                       source={{ uri: selectedImage }}
@@ -70,7 +92,10 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
                     />
                   </View>
                   <View>
-                    <TouchableOpacity style={styles.saveButton} onPress={() => handleImageSave()}>
+                    <TouchableOpacity
+                      style={styles.saveButton}
+                      onPress={() => handleImageSave()}
+                    >
                       <Text style={styles.saveText}>Save</Text>
                     </TouchableOpacity>
                   </View>
@@ -84,7 +109,7 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
                   </TouchableOpacity>
                 </View>
                 <View style={styles.buttonView}>
-                  <TouchableOpacity onPress={undefined}>
+                  <TouchableOpacity onPress={cameraPicker}>
                     <Text style={styles.buttonText}>Take Photo</Text>
                   </TouchableOpacity>
                 </View>
@@ -124,12 +149,12 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 20,
     paddingVertical: 5,
-    marginTop: 20
+    marginTop: 20,
   },
-  saveText: { 
-    textAlign: 'center',
-    color: "#fff", 
-    fontSize: 18 
+  saveText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 18,
   },
   buttonContainer: {
     flexDirection: "column",
@@ -144,7 +169,7 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     textAlign: "center",
     marginVertical: 10,
-    fontSize: 18
+    fontSize: 18,
   },
   title: {
     fontSize: 20,
@@ -155,8 +180,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   image: {
-    height: 185,
-    width: 260,
+    maxHeight: 260,
+    maxWidth: 260,
     marginTop: 20,
     borderRadius: 10,
   },
