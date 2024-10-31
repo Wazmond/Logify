@@ -25,6 +25,9 @@ const RmVehModal: React.FC<Props> = ({ rmModal, setRmModal, vehUUID }) => {
           <Text style={styles.titleText}>
             Are you sure you want to remove this vehicle?
           </Text>
+          <Text style={styles.titleDesc}>
+            Note: Any logs assigned to this vehicle will not be deleted. 
+          </Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.buttons} onPress={handleRmVeh} activeOpacity={0.7}>
               <Text style={[styles.buttonText, { color: '#ff0000' }]}>Remove</Text>
@@ -62,6 +65,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 15,
     marginHorizontal: 30,
+    textAlign: 'center'
+  },
+  titleDesc: {
+    fontSize: 16,
+    marginHorizontal: 30,
+    marginBottom: 15,
     textAlign: 'center'
   },
   buttonContainer: {
