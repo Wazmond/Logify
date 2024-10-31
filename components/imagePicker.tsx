@@ -16,20 +16,23 @@ import { useForm } from "@/constants/hooks";
 interface imagePickerComponentProps {
   imgState: boolean;
   setImgState: React.Dispatch<SetStateAction<boolean>>;
+  handleImageSave: (selectedImage: string) => void;
 }
 const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
   imgState,
   setImgState,
+  handleImageSave,
 }) => {
-  const [selectedImage, setSelectedImage] = useState("");
-  const { form, setForm } = useForm();
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  // const { form, setForm } = useForm();
 
   const libraryPicker = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!status) {
+    if (status !== "granted") {
       Alert.alert(
         "No access to photos, please allow access in settings (Settings -> Privacy and Security -> Photos -> Logify -> All Photos)"
       );
+      return;
     } else {
       try {
         let image = await ImagePicker.launchImageLibraryAsync({
@@ -37,20 +40,22 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
           quality: 1,
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
         });
-        !image?.canceled && ( setSelectedImage(image.assets[0].uri), Alert.alert("Size of image HxW: " + image.assets[0].height + ' x ' + image.assets[0].width))
-
+        if (!image.canceled) {
+          setSelectedImage(image.assets[0].uri);
+        }
       } catch (error) {
-        console.log("libaryPicker error: " + error);
+        Alert.alert(`${error}`);
       }
     }
   };
 
   const cameraPicker = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (!status) {
+    if (status !== "granted") {
       Alert.alert(
         "No access to camera, please allow access in settings (Settings -> Privacy and Security -> Camera and enable for Logify)"
       );
+      return;
     } else {
       try {
         let image = await ImagePicker.launchCameraAsync({
@@ -59,14 +64,9 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
         });
         !image.canceled && setSelectedImage(image.assets[0].uri);
       } catch (error) {
-        console.log("image picker error : " + error);
+        Alert.alert(`${error}`);
       }
     }
-  };
-
-  const handleImageSave = () => {
-    setForm({ ...form, imageUri: selectedImage });
-    setImgState(false);
   };
 
   return (
@@ -89,12 +89,13 @@ const ImagePickerComponent: React.FC<imagePickerComponentProps> = ({
                     <Image
                       source={{ uri: selectedImage }}
                       style={styles.image}
+                      resizeMode="contain"
                     />
                   </View>
                   <View>
                     <TouchableOpacity
                       style={styles.saveButton}
-                      onPress={() => handleImageSave()}
+                      onPress={() => handleImageSave(selectedImage)}
                     >
                       <Text style={styles.saveText}>Save</Text>
                     </TouchableOpacity>
@@ -180,8 +181,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   image: {
-    maxHeight: 260,
-    maxWidth: 260,
+    height: 260,
+    width: 260,
     marginTop: 20,
     borderRadius: 10,
   },
