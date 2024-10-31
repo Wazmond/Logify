@@ -7,26 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { GarageObject } from "@/slices/garageSlice";
+import React, {useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import ModsComponent from "./modsComponent";
+import ModsComponent from "../../components/modsComponent";
 
 interface Props {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-export const modsOpenState = {
-  body: false,
-  braking: false,
-  drivetrain: false,
-  electricals: false,
-  engine: false,
-  interior: false,
-  suspension: false,
-  wheels: false,
-};
 
 const ModalPage: React.FC<Props> = ({
   modalState,
@@ -110,7 +98,6 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 20,
-    // fontWeight: 'bold'
   },
   headerContainer: {
     padding: 10,
