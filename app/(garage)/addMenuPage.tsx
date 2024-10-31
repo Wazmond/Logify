@@ -63,6 +63,11 @@ const AddMenuPage = () => {
     }
   };
 
+  const handleImageSave = (selectedImage: string) => {
+    setForm({ ...form, imageUri: selectedImage });
+    setImgState(false);
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.screenContainer}>
@@ -210,7 +215,7 @@ const AddMenuPage = () => {
             <Text style={styles.clearText}>Clear Form</Text>
           </TouchableOpacity>
           <ClearModalComponent clearState={clearState} setClearState={setClearState} />
-          <ImagePickerComponent imgState={imgState} setImgState={setImgState} />
+          <ImagePickerComponent imgState={imgState} setImgState={setImgState} handleImageSave={handleImageSave}/>
         </View>
         <ModalPage modalState={modalState} setModalState={setModalState} />
       </View>
