@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GarageObject } from "@/slices/garageSlice";
 import { useForm } from "@/constants/hooks";
+import ModsIconComponent from "@/components/modsIconComponent";
 
 interface props {
   property: keyof GarageObject["modifications"];
@@ -17,6 +18,7 @@ interface props {
 
 const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
   const [inputValue, setInputValue] = useState("");
+  const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
   const { form, setForm } = useForm();
 
   const inputRef = useRef<TextInput | null>(null);
@@ -31,17 +33,42 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
         ...form,
         modifications: {
           ...form.modifications,
-          [property]: [...(form.modifications[property] || []), inputValue],
+          [property]:
+            propertyIndex !== null
+              ? [
+                  ...form.modifications[property].slice(0, propertyIndex),
+                  inputValue,
+                  ...form.modifications[property].slice(propertyIndex + 1),
+                ]
+              : [...(form.modifications[property] || []), inputValue],
         },
       });
     setInputValue("");
+    setPropertyIndex(null);
+  };
+
+  const handleEditPress = (index: number) => {
+    setPropertyIndex(index);
+    setInputValue(form.modifications[property][index]);
+  };
+  const handleRemovePress = (index: number) => {
+    setPropertyIndex(null);
+    setForm({
+      ...form,
+      modifications: {
+        ...form.modifications,
+        [property]: form.modifications[property].filter(
+          (item, itemIndex) => itemIndex !== index
+        ),
+      },
+    });
   };
 
   return (
     <View style={styles.component}>
       <TouchableOpacity
         onPress={() => {
-          setIsOpen(property);
+          isOpen !== property && setIsOpen(property);
         }}
       >
         <View style={styles.container}>
@@ -51,8 +78,13 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
               <View style={styles.modsComponent}>
                 {form.modifications[property]?.length > 0 &&
                   form.modifications[property].map((value, index) => (
-                    <View key={index}>
+                    <View key={index} style={styles.modsMapViewStyling}>
                       <Text>{value}</Text>
+                      <ModsIconComponent
+                        handleRemovePress={handleRemovePress}
+                        handleEditPress={handleEditPress}
+                        index={index}
+                      />
                     </View>
                   ))}
               </View>
@@ -101,5 +133,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
+  },
+  modsMapViewStyling: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
