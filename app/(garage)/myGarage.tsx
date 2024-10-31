@@ -9,12 +9,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useGarage } from "@/constants/hooks";
 
 export default function Index() {
-  const [addMenu, setAddMenu] = useState(false);
   const { garage, clrVeh } = useGarage();
 
   const vehicles = Object.values(garage);
