@@ -24,11 +24,6 @@ const GarageTab = () => {
         headerShown: false,
         headerTitle: "Add to Garage"
       }} />
-      <Stack.Screen
-      name="specs"
-      options={{
-        headerShown: false,
-      }} />
     </Stack>
   );
 };
