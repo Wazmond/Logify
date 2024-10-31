@@ -11,21 +11,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  GarageObject,
-  GarageState,
-  clearGarage,
-  garageSelector,
-} from "@/slices/garageSlice";
+import { useGarage } from "@/constants/hooks";
 
 export default function Index() {
   const [addMenu, setAddMenu] = useState(false);
+  const { garage, clrVeh } = useGarage();
 
-  const dispatch = useDispatch();
-
-  const garageState: GarageState = useSelector(garageSelector) || {};
-
-  const garage = Object.values(garageState);
+  const vehicles = Object.values(garage);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,7 +59,7 @@ export default function Index() {
         style={styles.garageContainer}
         showsVerticalScrollIndicator={false}
       >
-        {garage.length === 0 ? (
+        {vehicles.length === 0 ? (
           <View
             style={{
               backgroundColor: "#fff",
@@ -82,7 +74,7 @@ export default function Index() {
             </Link>
           </View>
         ) : (
-          garage.map((vehicle) => {
+          vehicles.map((vehicle) => {
             return (
               <TouchableOpacity
                 key={vehicle.vehUUID}
@@ -138,7 +130,7 @@ export default function Index() {
 
         <Button
           title="Clear Vehicles"
-          onPress={() => dispatch(clearGarage())}
+          onPress={() => clrVeh()}
         />
       </ScrollView>
     </SafeAreaView>

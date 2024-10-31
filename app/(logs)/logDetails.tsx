@@ -10,27 +10,13 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Feather,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import {
-  LogsObject,
-  addLog,
-  editLog,
-  logSelector,
-  removeLog,
-} from "@/slices/logsSlice";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { LogsObject, addLog, editLog, removeLog } from "@/slices/logsSlice";
 import { Dropdown } from "react-native-element-dropdown";
 import { Colors } from "@/constants/Colors";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import {
-  GarageObject,
-  GarageState,
-  garageSelector,
-} from "@/slices/garageSlice";
+import { useGarage } from "@/constants/hooks";
+import { GarageObject } from "@/slices/garageSlice";
 
 const logsInitialState: LogsObject = {
   logUUID: 0,
@@ -103,7 +89,7 @@ const LogDetails: React.FC<props> = ({ modalState, setModalState }) => {
   const locationRef = useRef<any>(null);
   const notesRef = useRef<any>(null);
 
-  const garage: GarageState = useSelector(garageSelector);
+  const { garage } = useGarage();
   const vehicleNames: GarageObject[] = Object.values(garage);
 
   const handleSave = () => {

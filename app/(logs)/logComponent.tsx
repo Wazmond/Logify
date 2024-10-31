@@ -1,7 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { SetStateAction, useState } from "react";
-import { Dispatch } from "@reduxjs/toolkit";
-import { LogsObject } from "@/slices/logsSlice";
+import React from "react";
 
 interface LogComponentProps {
   log: any;

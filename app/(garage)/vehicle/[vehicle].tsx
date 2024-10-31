@@ -4,47 +4,32 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableHighlight,
   TouchableOpacity,
   View,
-  ViewBase,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Stack,
   useLocalSearchParams,
-  useNavigation,
   useRouter,
 } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  GarageObject,
-  GarageState,
-  editVehicle,
-  garageSelector,
-  initialGarageObject,
-  removeVehicle,
-} from "@/slices/garageSlice";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useGarage } from "@/constants/hooks";
 
 const CarPage = () => {
-  const [form, setForm] = useState<GarageObject>(initialGarageObject);
   const [editable, setEditable] = useState(false);
+  const {garage, editVeh, rmVeh} = useGarage();
 
   const { vehicle } = useLocalSearchParams();
   const vehUUID = vehicle as string;
+
+  const veh = garage[vehUUID]
+
   const router = useRouter();
-
-  const dispatch = useDispatch();
-
-  const vehicles: GarageState = useSelector(garageSelector);
-  const veh: GarageObject | null = vehUUID ? vehicles[vehUUID] : null
-  useEffect(() => { veh && setForm(veh) }, [veh]);
 
   const handleRemoveVehicle = () => {
     console.log("Vehicle Removed");
     router.back();
-    dispatch(removeVehicle({ vehUUID }));
+    rmVeh(vehUUID);
   };
 
   return (
@@ -62,7 +47,7 @@ const CarPage = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            editable && console.log("Saving form"), dispatch(editVehicle(form));
+            editable && console.log("Saving form");
             setEditable(!editable);
           }}
         >

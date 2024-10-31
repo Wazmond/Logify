@@ -14,13 +14,12 @@ import { Dropdown } from "react-native-element-dropdown";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import LogModal from "./logModal";
-import VehicleDropdownItem from "@/customTypings";
 import LogComponent from "./logComponent";
 import { LogsObject, LogsState, clearLog } from "@/slices/logsSlice";
 import LogDetails from "./logDetails";
-import { GarageState, garageSelector } from "@/slices/garageSlice";
+import { useGarage } from "@/constants/hooks";
 
-const logsInitialState: LogsObject = {  
+const logsInitialState: LogsObject = {
   logUUID: 0,
   vehUUID: "",
   date: "",
@@ -36,21 +35,24 @@ const logsInitialState: LogsObject = {
     price: "",
     notes: "",
   },
-}
+};
 
 const LogsPage = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("all");
   const [modalStateLD, setModalStateLD] = useState({
     state: false,
-    log: logsInitialState
+    log: logsInitialState,
   });
   const [modalStateNL, setModalStateNL] = useState(false);
 
   const dispatch = useDispatch();
 
-  const vehicles = Object.values(useSelector(garageSelector));
+  const { garage } = useGarage();
+
+  const vehicles = Object.values(garage);
 
   const logsList = useSelector((state: any) => state.logs);
+
   const sortedLogsList =
     selectedVehicle === "all"
       ? Object.entries(logsList as LogsState)
@@ -114,10 +116,7 @@ const LogsPage = () => {
         })}
       </ScrollView>
       <LogModal modalState={modalStateNL} setModalState={setModalStateNL} />
-      <LogDetails
-                modalState={modalStateLD}
-                setModalState={setModalStateLD}
-              />
+      <LogDetails modalState={modalStateLD} setModalState={setModalStateLD} />
 
       <Button title="clear log" onPress={() => dispatch(clearLog())} />
     </SafeAreaView>

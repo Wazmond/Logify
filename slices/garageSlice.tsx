@@ -63,8 +63,8 @@ export const garageSlice = createSlice({
         state[vehUUID] = action.payload;
       }
     },
-    removeVehicle: (state, action: PayloadAction<{ vehUUID: string }>) => {
-      const { vehUUID } = action.payload;
+    removeVehicle: (state, action: PayloadAction<string>) => {
+      const vehUUID = action.payload;
       if (state[vehUUID]) {
         delete state[vehUUID];
       }
@@ -81,7 +81,5 @@ export const garageSlice = createSlice({
 
 export const { addToGarage, clearGarage, editVehicle, removeVehicle } =
   garageSlice.actions;
-
-export const garageSelector = (state: RootState) => state.myGarage;
 
 export default garageSlice.reducer;

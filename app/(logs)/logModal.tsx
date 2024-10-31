@@ -7,32 +7,18 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
-  Keyboard,
   ScrollView,
-  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { LogsObject, addLog } from "@/slices/logsSlice";
 import { Colors } from "@/constants/Colors";
-import { garageSelector } from "@/slices/garageSlice";
+import { useGarage } from "@/constants/hooks";
 
 interface NewLogModalProps {
   modalState: boolean;
   setModalState: (state: boolean) => void;
-}
-
-interface VehicleDropdownItem {
-  vehUUID: string;
-  car: {
-    year: number;
-    make: string;
-    model: string;
-  };
-  rego: string;
-  nickName: string;
-  name: string; // Add the calculated name field
 }
 
 interface LabelDropdown {
@@ -87,7 +73,8 @@ const LogModal: React.FC<NewLogModalProps> = ({
   const locationRef = useRef<any>(null);
   const notesRef = useRef<any>(null);
 
-  const vehicles = Object.values(useSelector(garageSelector));
+  const { garage } = useGarage()
+  const vehicles = Object.values(garage);
 
   const label: LabelDropdown[] = [
     { label: "Inspection", value: "Inspection" },
