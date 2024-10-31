@@ -49,7 +49,7 @@ const LogsPage = () => {
 
   const { garage } = useGarage();
 
-  const vehicles = Object.values(garage);
+  const vehicles = [{name: "All Vehicles", vehUUID: 'all'}, ...Object.values(garage)];
 
   const logsList = useSelector((state: any) => state.logs);
 
