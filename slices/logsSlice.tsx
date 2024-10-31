@@ -56,7 +56,7 @@ export const logsSlice = createSlice({
         delete state[vehUUID][logUUID];
       }
     },
-    clearLog: (state) => {
+    clearLog: () => {
       return {};
     },
   },
