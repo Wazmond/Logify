@@ -8,21 +8,22 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import {
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useGarage } from "@/constants/hooks";
+import RmVehModal from "@/components/rmVehModal";
+import ImagePickerComponent from "@/components/imagePicker";
 
 const CarPage = () => {
-  const [editable, setEditable] = useState(false);
-  const {garage, editVeh, rmVeh} = useGarage();
+  // const [editable, setEditable] = useState<boolean>(false);
+  const [rmModal, setRmModal] = useState<boolean>(false);
+  const [imgState, setImgState] = useState<boolean>(false)
+
+  const { garage, rmVeh, editVeh } = useGarage();
 
   const { vehicle } = useLocalSearchParams();
   const vehUUID = vehicle as string;
-
-  const veh = garage[vehUUID]
+  const veh = garage[vehUUID];
 
   const router = useRouter();
 
@@ -30,6 +31,11 @@ const CarPage = () => {
     console.log("Vehicle Removed");
     router.back();
     rmVeh(vehUUID);
+  };
+
+  const handleImageSave = ( selectedImage: string) => {
+    editVeh({ ...veh, imageUri: selectedImage });
+    setImgState(false);
   };
 
   return (
@@ -42,10 +48,13 @@ const CarPage = () => {
               size={30}
               color={"#0E7AFE"}
             />
-            <Text style={{ fontSize: 20, color: "#0E7AFE" }}>My Garage</Text>
+            <Text style={styles.headerText}>My Garage</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
+        <TouchableOpacity onPress={() => setRmModal(true)}>
+          <Text style={[styles.headerText, { color: "#ff0000" }]}>Delete</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity
           onPress={() => {
             editable && console.log("Saving form");
             setEditable(!editable);
@@ -58,26 +67,51 @@ const CarPage = () => {
               <Text style={{ fontSize: 20, color: "#0E7AFE" }}>Edit</Text>
             )}
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.imageContainer}>
-        <View style={styles.image} />
+        {veh.imageUri ? (
+          <Image style={styles.image} source={{ uri: veh.imageUri}} resizeMode="contain" />
+        ) : (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.bigButtons}
+            onPress={() => setImgState(true)}
+          >
+            <Text style={styles.imgText}>Press here to add a photo</Text>
+            <View style={{ alignItems: "center" }}>
+                <View style={styles.photoButtonIcon}>
+                  <MaterialIcons size={30} name="photo" color="#FFF" />
+                </View>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
 
-      <View style={styles.buttonContainer}>
-        <View>
-          <Text>{veh?.name}</Text>
-          <Text>{veh?.rego}</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>{veh?.name}</Text>
         </View>
-        <View>
-          <Text>Vehicle Logs</Text>
+        <View style={styles.pressablesContainer}>
+          <View style={styles.pressables}>
+            <TouchableOpacity>
+              <Text style={styles.text}>View and edit details</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.pressables}>
+            <TouchableOpacity>
+              <Text style={styles.text}>View logs of vehicle</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text style={styles.text}>CarPage, params: {veh?.name}</Text>
       </View>
       <View>
         <Button title="Remove Vehicle" onPress={handleRemoveVehicle} />
       </View>
+
+      <ImagePickerComponent imgState={imgState} setImgState={setImgState} handleImageSave={handleImageSave} />
+      <RmVehModal rmModal={rmModal} setRmModal={setRmModal} vehUUID={vehUUID} />
     </SafeAreaView>
   );
 };
@@ -95,25 +129,70 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 10,
   },
+  headerText: {
+    fontSize: 20,
+    color: "#0E7AFE",
+  },
+  imgText: {
+    fontSize: 14,
+    textAlign: 'center'
+  },
+  bigButtons: {
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#fff",
+    marginVertical: 5,
+    width: "100%",
+  },
+  photoButtonIcon: {
+    backgroundColor: "#bbb",
+    borderRadius: 50,
+    padding: 10,
+    marginTop: 10,
+  },
   backPage: {
     flexDirection: "row",
     alignItems: "center",
   },
   imageContainer: {
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     flex: 1,
   },
   image: {
-    backgroundColor: "green",
-    height: "100%",
-    width: "100%",
+    width: '100%',
+    flex: 1,
   },
-  buttonContainer: {
+  infoContainer: {
     flex: 2,
-    justifyContent: "center",
     alignItems: "center",
   },
+  titleContainer: {
+    marginVertical: 30,
+  },
+  titleText: {
+    fontSize: 20,
+    letterSpacing: 1,
+  },
+  pressablesContainer: {
+    flex: 1,
+    gap: 15,
+  },
+  pressables: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
+  },
   text: {
-    fontSize: 18,
-    color: "#333",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
