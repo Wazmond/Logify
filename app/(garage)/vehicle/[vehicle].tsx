@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useGarage } from "@/constants/hooks";
 import RmVehModal from "@/components/rmVehModal";
@@ -17,9 +17,9 @@ import ImagePickerComponent from "@/components/imagePicker";
 const CarPage = () => {
   // const [editable, setEditable] = useState<boolean>(false);
   const [rmModal, setRmModal] = useState<boolean>(false);
-  const [imgState, setImgState] = useState<boolean>(false)
+  const [imgState, setImgState] = useState<boolean>(false);
 
-  const { garage, rmVeh, editVeh } = useGarage();
+  const { garage, editVeh } = useGarage();
 
   const { vehicle } = useLocalSearchParams();
   const vehUUID = vehicle as string;
@@ -27,13 +27,7 @@ const CarPage = () => {
 
   const router = useRouter();
 
-  const handleRemoveVehicle = () => {
-    console.log("Vehicle Removed");
-    router.back();
-    rmVeh(vehUUID);
-  };
-
-  const handleImageSave = ( selectedImage: string) => {
+  const handleImageSave = (selectedImage: string) => {
     editVeh({ ...veh, imageUri: selectedImage });
     setImgState(false);
   };
@@ -72,7 +66,11 @@ const CarPage = () => {
 
       <View style={styles.imageContainer}>
         {veh.imageUri ? (
-          <Image style={styles.image} source={{ uri: veh.imageUri}} resizeMode="contain" />
+          <Image
+            style={styles.image}
+            source={{ uri: veh.imageUri }}
+            resizeMode="contain"
+          />
         ) : (
           <TouchableOpacity
             activeOpacity={0.7}
@@ -81,9 +79,9 @@ const CarPage = () => {
           >
             <Text style={styles.imgText}>Press here to add a photo</Text>
             <View style={{ alignItems: "center" }}>
-                <View style={styles.photoButtonIcon}>
-                  <MaterialIcons size={30} name="photo" color="#FFF" />
-                </View>
+              <View style={styles.photoButtonIcon}>
+                <MaterialIcons size={30} name="photo" color="#FFF" />
+              </View>
             </View>
           </TouchableOpacity>
         )}
@@ -94,23 +92,36 @@ const CarPage = () => {
           <Text style={styles.titleText}>{veh?.name}</Text>
         </View>
         <View style={styles.pressablesContainer}>
-          <View style={styles.pressables}>
-            <TouchableOpacity>
+          <View>
+            <TouchableOpacity style={styles.pressables}
+            onPress={() => {router.navigate({
+              pathname: "/(garage)/addMenuPage",
+              params: { vehUUID }
+            })}}>
               <Text style={styles.text}>View and edit details</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.pressables}>
-            <TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(logs)/logs",
+                  params: { vehUUID },
+                })
+              }
+              style={styles.pressables}
+            >
               <Text style={styles.text}>View logs of vehicle</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      <View>
-        <Button title="Remove Vehicle" onPress={handleRemoveVehicle} />
-      </View>
 
-      <ImagePickerComponent imgState={imgState} setImgState={setImgState} handleImageSave={handleImageSave} />
+      <ImagePickerComponent
+        imgState={imgState}
+        setImgState={setImgState}
+        handleImageSave={handleImageSave}
+      />
       <RmVehModal rmModal={rmModal} setRmModal={setRmModal} vehUUID={vehUUID} />
     </SafeAreaView>
   );
@@ -135,15 +146,15 @@ const styles = StyleSheet.create({
   },
   imgText: {
     fontSize: 14,
-    textAlign: 'center'
+    textAlign: "center",
   },
   bigButtons: {
     borderRadius: 10,
-    paddingVertical: 10,
+    paddingVertical: 25,
     paddingHorizontal: 20,
     backgroundColor: "#fff",
     marginVertical: 5,
-    width: "100%",
+    marginHorizontal: 50,
   },
   photoButtonIcon: {
     backgroundColor: "#bbb",
@@ -163,7 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: '100%',
+    width: "100%",
     flex: 1,
   },
   infoContainer: {
