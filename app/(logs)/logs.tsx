@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Modal,
   SafeAreaView,
@@ -18,6 +19,7 @@ import LogComponent from "./logComponent";
 import { LogsObject, LogsState, clearLog } from "@/slices/logsSlice";
 import LogDetails from "./logDetails";
 import { useGarage } from "@/constants/hooks";
+import { useLocalSearchParams } from "expo-router";
 
 const logsInitialState: LogsObject = {
   logUUID: 0,
@@ -38,12 +40,20 @@ const logsInitialState: LogsObject = {
 };
 
 const LogsPage = () => {
+  const { vehUUID } = useLocalSearchParams()
+  // Alert.alert("vehUUID params" +  vehUUID )
+  const vehUUIDparams = vehUUID as string
+
   const [selectedVehicle, setSelectedVehicle] = useState("all");
   const [modalStateLD, setModalStateLD] = useState({
     state: false,
     log: logsInitialState,
   });
   const [modalStateNL, setModalStateNL] = useState(false);
+
+  useEffect(() => {
+    if (vehUUIDparams) {setSelectedVehicle(vehUUIDparams)}
+  }, [vehUUIDparams])
 
   const dispatch = useDispatch();
 
@@ -71,7 +81,7 @@ const LogsPage = () => {
           value={selectedVehicle}
           labelField="name"
           valueField="vehUUID"
-          placeholder="Select Vehicle"
+          placeholder="All Vehicles"
           onChange={(car) => {
             setSelectedVehicle(car.vehUUID);
           }}
