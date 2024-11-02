@@ -20,6 +20,7 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
   const [inputValue, setInputValue] = useState("");
   const [propertyIndex, setPropertyIndex] = useState<number | null>(null);
   const { form, setForm } = useForm();
+  const [ deletableStates, setDeletableStates ] = useState<boolean[]>(new Array(form.modifications[property].length).fill(false))
 
   const inputRef = useRef<TextInput | null>(null);
 
@@ -52,6 +53,7 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
     setInputValue(form.modifications[property][index]);
   };
   const handleRemovePress = (index: number) => {
+    setInputValue('')
     setPropertyIndex(null);
     setForm({
       ...form,
@@ -64,6 +66,13 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
     });
   };
 
+  const handleSetDeletable = (index: number, state: boolean) => {
+    setDeletableStates((prevState) => {
+      const deletables = prevState
+      deletables[index] = state;
+      return deletables
+    })
+  }
   return (
     <View style={styles.component}>
       <TouchableOpacity
@@ -84,6 +93,8 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
                         handleRemovePress={handleRemovePress}
                         handleEditPress={handleEditPress}
                         index={index}
+                        deletable={deletableStates[index]}
+                        setDeletable={handleSetDeletable}
                       />
                     </View>
                   ))}
@@ -96,7 +107,9 @@ const ModsComponent: React.FC<props> = ({ property, setIsOpen, isOpen }) => {
                   setInputValue(e);
                 }}
                 style={styles.inputBox}
-                onSubmitEditing={() => handleTextSubmit()}
+                onSubmitEditing={() => {handleTextSubmit(),
+                  setDeletableStates(Array(form.modifications[property].length).fill(false))
+                }}
               />
             </View>
           )}

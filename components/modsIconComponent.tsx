@@ -1,20 +1,21 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { SetStateAction, useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 interface Props {
     handleRemovePress: (index: number) => void,
     handleEditPress: (index: number) => void,
-    index: number
+    index: number,
+    deletable: boolean,
+    setDeletable: (index: number, state: boolean) => void
 }
-const ModsIconComponent: React.FC<Props> = ({ handleRemovePress, handleEditPress, index}) => {
-  const [deletable, setDeletable] = useState<boolean>(false);
+const ModsIconComponent: React.FC<Props> = ({ handleRemovePress, handleEditPress, index, deletable, setDeletable}) => {
   return (
     <View>
       {deletable ? (
         <TouchableOpacity
           style={[styles.iconTouchableStyling, { backgroundColor: "#ff0000" }]}
-          onPress={() => {handleRemovePress(index), setDeletable(false)}}
+          onPress={() => {setDeletable(index, false), handleRemovePress(index)}}
         >
           <MaterialCommunityIcons
             name="trash-can"
@@ -26,7 +27,7 @@ const ModsIconComponent: React.FC<Props> = ({ handleRemovePress, handleEditPress
       ) : (
         <TouchableOpacity
           style={styles.iconTouchableStyling}
-          onPress={() => {handleEditPress(index), setDeletable(true)}}
+          onPress={() => {handleEditPress(index), setDeletable(index, true)}}
         >
           <MaterialIcons
             name="edit"

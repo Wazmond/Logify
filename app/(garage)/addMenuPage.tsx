@@ -10,10 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "react-native-get-random-values";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import {
   GarageObject,
   addToGarage,
@@ -22,17 +22,26 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import ModalPage from "./modalPage";
-import { useForm } from "@/constants/hooks";
+import { useForm, useGarage } from "@/constants/hooks";
 import ImagePickerComponent from "@/components/imagePicker";
 import ClearModalComponent from "@/components/clearModal";
 
 const AddMenuPage = () => {
   const { form, setForm } = useForm();
+  const { garage, editVeh } = useGarage();
+
+  const { vehUUID } = useLocalSearchParams();
+  const vehUUIDparams = vehUUID as string;
+  const [redir, setRedir] = useState<boolean>(false);
+  useEffect(() => {
+    vehUUIDparams ? setRedir(true) : setRedir(false);
+    setForm(garage[vehUUIDparams]);
+  }, [vehUUIDparams]);
+
   const [imgState, setImgState] = useState<boolean>(false);
   const [modalState, setModalState] = useState<boolean>(false);
   const [clearState, setClearState] = useState<boolean>(false);
 
-  const yearRef = useRef<TextInput | null>(null);
   const makeRef = useRef<TextInput | null>(null);
   const modelRef = useRef<TextInput | null>(null);
   const variantRef = useRef<TextInput | null>(null);
@@ -63,6 +72,16 @@ const AddMenuPage = () => {
     }
   };
 
+  const handleSavePress = () => {
+    try {
+      editVeh(form);
+      setForm(initialGarageObject);
+      router.back();
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
+  };
+
   const handleImageSave = (selectedImage: string) => {
     setForm({ ...form, imageUri: selectedImage });
     setImgState(false);
@@ -88,13 +107,23 @@ const AddMenuPage = () => {
 
           <Text style={styles.titleText}>Vehicle Information</Text>
 
-          <TouchableHighlight
-            onPress={handleAddPress}
-            underlayColor={"#0E7AFE"}
-            style={styles.addVehicleButton}
-          >
-            <Text style={styles.addVehicleText}>Add Vehicle</Text>
-          </TouchableHighlight>
+          {redir ? (
+            <TouchableHighlight
+              onPress={handleSavePress}
+              underlayColor={"#0E7AFE"}
+              style={styles.addVehicleButton}
+            >
+              <Text style={styles.addVehicleText}>Save</Text>
+            </TouchableHighlight>
+          ) : (
+            <TouchableHighlight
+              onPress={handleAddPress}
+              underlayColor={"#0E7AFE"}
+              style={styles.addVehicleButton}
+            >
+              <Text style={styles.addVehicleText}>Add Vehicle</Text>
+            </TouchableHighlight>
+          )}
         </View>
         <View style={styles.inputContainer}>
           <View style={[styles.inputSection, { gap: 10 }]}>
@@ -211,11 +240,24 @@ const AddMenuPage = () => {
               )}
             </View>
           </TouchableHighlight>
-          <TouchableOpacity style={styles.clearTouchable} onPress={() => setClearState(true)}>
-            <Text style={styles.clearText}>Clear Form</Text>
-          </TouchableOpacity>
-          <ClearModalComponent clearState={clearState} setClearState={setClearState} />
-          <ImagePickerComponent imgState={imgState} setImgState={setImgState} handleImageSave={handleImageSave}/>
+          {!redir && (
+            <TouchableOpacity
+              style={styles.clearTouchable}
+              onPress={() => setClearState(true)}
+            >
+              <Text style={styles.clearText}>Clear Form</Text>
+            </TouchableOpacity>
+          )}
+
+          <ClearModalComponent
+            clearState={clearState}
+            setClearState={setClearState}
+          />
+          <ImagePickerComponent
+            imgState={imgState}
+            setImgState={setImgState}
+            handleImageSave={handleImageSave}
+          />
         </View>
         <ModalPage modalState={modalState} setModalState={setModalState} />
       </View>
@@ -242,7 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#0E7AFE",
     borderRadius: 13,
     paddingVertical: 4,
-    paddingHorizontal: 6,
+    paddingHorizontal: 10,
     marginLeft: "auto",
     height: 30,
   },
@@ -291,15 +333,15 @@ const styles = StyleSheet.create({
   clearTouchable: {
     marginTop: 20,
     borderWidth: 1,
-    borderColor: '#bbb',
-    backgroundColor: '#fff',
+    borderColor: "#bbb",
+    backgroundColor: "#fff",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
-    marginHorizontal: 'auto'
+    marginHorizontal: "auto",
   },
   clearText: {
-    color: '#ff0000',
+    color: "#ff0000",
     fontSize: 18,
     textAlign: "center",
   },
