@@ -31,12 +31,12 @@ const AddMenuPage = () => {
   const { garage, editVeh } = useGarage();
 
   const { vehUUID } = useLocalSearchParams();
-  const vehUUIDparams = vehUUID as string;
+  const vehUUIDparams = vehUUID as string
   const [redir, setRedir] = useState<boolean>(false);
   useEffect(() => {
-    vehUUIDparams ? setRedir(true) : setRedir(false);
+    vehUUID ? setRedir(true) : setRedir(false);
     setForm(garage[vehUUIDparams]);
-  }, [vehUUIDparams]);
+  }, [vehUUID]);
 
   const [imgState, setImgState] = useState<boolean>(false);
   const [modalState, setModalState] = useState<boolean>(false);
@@ -92,20 +92,25 @@ const AddMenuPage = () => {
       <View style={styles.screenContainer}>
         <View style={styles.headerContainer}>
           <TouchableHighlight
-            onPress={() => router.back()}
+            onPress={() => {
+              redir && setForm(initialGarageObject)
+              router.back()
+            }}
             underlayColor={"#dddddd"}
             style={{
               borderRadius: 50,
+              paddingRight: 10
             }}
           >
-            <MaterialIcons
-              name="arrow-back-ios-new"
-              size={30}
-              color={"#0E7AFE"}
-            />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <MaterialIcons
+                name="arrow-back-ios-new"
+                size={30}
+                color={"#0E7AFE"}
+              />
+              <Text style={styles.titleText}>Back</Text>
+            </View>
           </TouchableHighlight>
-
-          <Text style={styles.titleText}>Vehicle Information</Text>
 
           {redir ? (
             <TouchableHighlight
@@ -293,7 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   inputContainer: {
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 20,
     flexWrap: "wrap",
     flexDirection: "row",
