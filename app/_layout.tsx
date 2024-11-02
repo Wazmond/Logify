@@ -40,6 +40,7 @@ function StackLayout() {
             name="(profile)"
             options={{
               headerShown: false,
+              href: null,
               headerTitle: "Profile",
               tabBarLabel: "Profile",
               tabBarIcon: ({ color, size }) => (

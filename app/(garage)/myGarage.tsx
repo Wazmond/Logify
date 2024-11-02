@@ -125,10 +125,10 @@ export default function Index() {
           })
         )}
 
-        <Button
+        {/* <Button
           title="Clear Vehicles"
           onPress={() => clrVeh()}
-        />
+        /> */}
       </ScrollView>
     </SafeAreaView>
   );

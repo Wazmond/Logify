@@ -41,7 +41,6 @@ const logsInitialState: LogsObject = {
 
 const LogsPage = () => {
   const { vehUUID } = useLocalSearchParams()
-  // Alert.alert("vehUUID params" +  vehUUID )
   const vehUUIDparams = vehUUID as string
 
   const [selectedVehicle, setSelectedVehicle] = useState("all");
@@ -104,7 +103,7 @@ const LogsPage = () => {
               <AntDesign name="plus" size={30} style={styles.icon} />
             </TouchableHighlight>
           </View>
-          <View style={[styles.iconCircle, styles.filterIcon]}>
+          {/* <View style={[styles.iconCircle, styles.filterIcon]}>
             <TouchableHighlight
               underlayColor={"#bbbbbb"}
               style={{ borderRadius: 50 }}
@@ -112,7 +111,7 @@ const LogsPage = () => {
             >
               <AntDesign name="filter" size={30} style={styles.icon} />
             </TouchableHighlight>
-          </View>
+          </View> */}
         </View>
       </View>
 
@@ -128,7 +127,7 @@ const LogsPage = () => {
       <LogModal modalState={modalStateNL} setModalState={setModalStateNL} />
       <LogDetails modalState={modalStateLD} setModalState={setModalStateLD} />
 
-      <Button title="clear log" onPress={() => dispatch(clearLog())} />
+      {/* <Button title="clear log" onPress={() => dispatch(clearLog())} /> */}
     </SafeAreaView>
   );
 };
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 40,
-    flex: 1.5,
+    flex: 2,
     backgroundColor: "white",
     borderRadius: 15,
     marginHorizontal: 15,
@@ -176,7 +175,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   iconCircle: {
     backgroundColor: "#ffffff",
