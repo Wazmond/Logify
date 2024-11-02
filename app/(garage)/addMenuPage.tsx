@@ -74,7 +74,7 @@ const AddMenuPage = () => {
 
   const handleSavePress = () => {
     try {
-      editVeh(form);
+      editVeh({...form, name: `${form.car.year} ${form.car.make} ${form.car.model}` });
       setForm(initialGarageObject);
       router.back();
     } catch (error) {
