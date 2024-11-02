@@ -136,7 +136,6 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection
   },
   garageContainer: {
     marginTop: 10,
