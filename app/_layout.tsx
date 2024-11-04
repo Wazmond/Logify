@@ -37,6 +37,16 @@ function StackLayout() {
             }}
           />
           <Tabs.Screen
+          name="(settings)"
+          options={{
+            headerShown: false,
+            tabBarLabel: "Settings",
+            tabBarIcon: ({color, size}) => (
+              <MaterialIcons name="settings" color={color} size= {30} />
+            )
+          }}
+          />
+          <Tabs.Screen
             name="(profile)"
             options={{
               headerShown: false,

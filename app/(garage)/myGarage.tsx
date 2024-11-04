@@ -20,7 +20,6 @@ export default function Index() {
     <SafeAreaView style={styles.container}>
       <View
         style={{
-          height: 60,
           justifyContent: "center",
           alignItems: "center",
           paddingHorizontal: 20,
