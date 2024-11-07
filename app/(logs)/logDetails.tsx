@@ -6,35 +6,20 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { LogsObject, addLog, editLog, removeLog } from "@/slices/logsSlice";
+import { LogsObject, addLog, editLog, logsInitialState, removeLog } from "@/slices/logsSlice";
 import { Dropdown } from "react-native-element-dropdown";
 import { Colors } from "@/constants/Colors";
 import { useDispatch, useSelector } from "react-redux";
 import { useGarage } from "@/constants/hooks";
 import { GarageObject } from "@/slices/garageSlice";
-
-const logsInitialState: LogsObject = {
-  logUUID: 0,
-  vehUUID: "",
-  date: "",
-  time: "",
-  label: "",
-  data: {
-    title: "",
-    desc: "",
-  },
-  additionals: {
-    odo: "",
-    location: "",
-    price: "",
-    notes: "",
-  },
-};
+import ClearModalComponent from "@/components/clearModal";
+import DelLogComponent from "@/components/delLogModal";
 
 interface props {
   modalState: {
@@ -58,12 +43,13 @@ interface VehicleDropdownItem {
   };
   rego: string;
   nickName: string;
-  name: string; // Add the calculated name field
+  name: string;
 }
 
 const LogDetails: React.FC<props> = ({ modalState, setModalState }) => {
   const [editable, setEditable] = useState(false);
   const [form, setForm] = useState<LogsObject>(logsInitialState);
+  const [delState, setDelState] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -337,8 +323,17 @@ const LogDetails: React.FC<props> = ({ modalState, setModalState }) => {
                 />
               </View>
             </TouchableWithoutFeedback>
+            <View style={[styles.delBackground, {marginTop: 15}]}>
+              <TouchableOpacity
+                style={styles.delTouchable}
+                onPress={() => setDelState(true)}
+              >
+                <Text style={styles.delText}>Delete Log</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
+        <DelLogComponent vehUUID={form.vehUUID} logUUID={form.logUUID} delState={delState} setDelState={setDelState} setModalState={setModalState}/>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -388,5 +383,23 @@ const styles = StyleSheet.create({
   inlineView: {
     flexDirection: "row",
     gap: 5,
+  },
+  delBackground: {
+    backgroundColor: '#fff'
+  },
+  delTouchable: {
+    marginTop: 15,
+    borderWidth: 1,
+    borderColor: "#bbb",
+    backgroundColor: "#fff",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginHorizontal: "auto",
+  },
+  delText: {
+    color: "#ff0000",
+    fontSize: 18,
+    textAlign: "center",
   },
 });
