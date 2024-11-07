@@ -19,6 +19,24 @@ export interface LogsObject {
   };
 }
 
+export const logsInitialState: LogsObject = {
+  logUUID: 0,
+  vehUUID: "",
+  date: "",
+  time: "",
+  label: "",
+  data: {
+    title: "",
+    desc: "",
+  },
+  additionals: {
+    odo: "",
+    location: "",
+    price: "",
+    notes: "",
+  },
+};
+
 export interface LogsState {
   [vehUUID: string]: {
     [logUUID: string]: LogsObject;
@@ -39,12 +57,12 @@ export const logsSlice = createSlice({
       if (!state[vehUUID]) {
         state[vehUUID] = {};
       }
-      state[vehUUID][log.logUUID] = log;
+      state[vehUUID][log.logUUID] = {...log};
     },
     editLog: (state, action: PayloadAction<{ log: LogsObject }>) => {
       const { vehUUID, logUUID } = action.payload.log;
       if (state[vehUUID]) {
-        state[vehUUID][logUUID] = action.payload.log;
+        state[vehUUID][logUUID] = {...action.payload.log};
       }
     },
     removeLog: (

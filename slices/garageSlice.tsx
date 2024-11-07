@@ -60,7 +60,7 @@ export const garageSlice = createSlice({
     addToGarage: (state, action: PayloadAction<GarageObject>) => {
       const { vehUUID } = action.payload;
       if (!state[vehUUID]) {
-        state[vehUUID] = action.payload;
+        state[vehUUID] = {...action.payload};
       }
     },
     removeVehicle: (state, action: PayloadAction<string>) => {
@@ -72,7 +72,7 @@ export const garageSlice = createSlice({
     editVehicle: (state, action: PayloadAction<GarageObject>) => {
       const { vehUUID } = action.payload;
       if (state[vehUUID]) {
-        state[vehUUID] = action.payload;
+        state[vehUUID] = {...action.payload};
       }
     },
     clearGarage: () => initialState,
