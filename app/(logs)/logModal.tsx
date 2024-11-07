@@ -8,11 +8,12 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { LogsObject, addLog } from "@/slices/logsSlice";
+import { LogsObject, addLog, logsInitialState } from "@/slices/logsSlice";
 import { Colors } from "@/constants/Colors";
 import { useGarage } from "@/constants/hooks";
 
@@ -26,30 +27,12 @@ interface LabelDropdown {
   value: string;
 }
 
-const initialForm: LogsObject = {
-  logUUID: 0,
-  vehUUID: "",
-  date: "",
-  time: "",
-  label: "",
-  data: {
-    title: "",
-    desc: "",
-  },
-  additionals: {
-    odo: "",
-    location: "",
-    price: "",
-    notes: "",
-  },
-};
-
 const LogModal: React.FC<NewLogModalProps> = ({
   modalState,
   setModalState,
 }) => {
   const [formValid, setFormValid] = useState(false);
-  const [form, setForm] = useState<LogsObject>(initialForm);
+  const [form, setForm] = useState<LogsObject>(logsInitialState);
 
   const dispatch = useDispatch();
 
@@ -60,7 +43,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
   }, [form.vehUUID, form.label, form.data.title, form.data.desc]);
 
   useEffect(() => {
-    setForm(initialForm);
+    setForm(logsInitialState);
     setFormValid(false);
   }, [modalState]);
 
@@ -103,9 +86,14 @@ const LogModal: React.FC<NewLogModalProps> = ({
       date: day + "-" + month + "-" + year,
       time: hours + ":" + minutes,
     };
-    formValid
+    try {
+      formValid
       ? (dispatch(addLog({ vehUUID: form.vehUUID, log })), setModalState(false))
       : console.log("form is invalid");
+    } catch (error) {
+      Alert.alert("" + error)
+    }
+
   };
 
   return (
@@ -119,7 +107,7 @@ const LogModal: React.FC<NewLogModalProps> = ({
       <View style={styles.modalHeader}>
         <TouchableOpacity
           onPress={() => {
-            setModalState(false), setForm(initialForm);
+            setModalState(false), setForm(logsInitialState);
           }}
         >
           <Text style={styles.modalHeaderCancelText}>Cancel</Text>

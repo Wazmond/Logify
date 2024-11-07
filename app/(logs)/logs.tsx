@@ -16,32 +16,14 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import LogModal from "./logModal";
 import LogComponent from "./logComponent";
-import { LogsObject, LogsState, clearLog } from "@/slices/logsSlice";
+import { LogsObject, LogsState, clearLog, logsInitialState } from "@/slices/logsSlice";
 import LogDetails from "./logDetails";
 import { useGarage } from "@/constants/hooks";
 import { useLocalSearchParams } from "expo-router";
 
-const logsInitialState: LogsObject = {
-  logUUID: 0,
-  vehUUID: "",
-  date: "",
-  time: "",
-  label: "",
-  data: {
-    title: "",
-    desc: "",
-  },
-  additionals: {
-    odo: "",
-    location: "",
-    price: "",
-    notes: "",
-  },
-};
-
 const LogsPage = () => {
-  const { vehUUID } = useLocalSearchParams()
-  const vehUUIDparams = vehUUID as string
+  const { vehUUID } = useLocalSearchParams();
+  const vehUUIDparams = vehUUID as string;
 
   const [selectedVehicle, setSelectedVehicle] = useState("all");
   const [modalStateLD, setModalStateLD] = useState({
@@ -51,14 +33,17 @@ const LogsPage = () => {
   const [modalStateNL, setModalStateNL] = useState(false);
 
   useEffect(() => {
-    if (vehUUIDparams) {setSelectedVehicle(vehUUIDparams)}
-  }, [vehUUIDparams])
-
-  const dispatch = useDispatch();
+    if (vehUUIDparams) {
+      setSelectedVehicle(vehUUIDparams);
+    }
+  }, [vehUUIDparams]);
 
   const { garage } = useGarage();
 
-  const vehicles = [{name: "All Vehicles", vehUUID: 'all'}, ...Object.values(garage)];
+  const vehicles = [
+    { name: "All Vehicles", vehUUID: "all" },
+    ...Object.values(garage),
+  ];
 
   const logsList = useSelector((state: any) => state.logs);
 
@@ -115,15 +100,24 @@ const LogsPage = () => {
         </View>
       </View>
 
-      <ScrollView style={styles.timelineContainer}>
-        {sortedLogsList?.map((log, index) => {
-          return (
-            <View key={index}>
-              <LogComponent log={log} setModalStateLD={setModalStateLD} />
-            </View>
-          );
-        })}
-      </ScrollView>
+      {sortedLogsList.length !== 0 ? (
+        <ScrollView style={styles.timelineContainer}>
+          {sortedLogsList?.map((log, index) => {
+            return (
+              <View key={index}>
+                <LogComponent log={log} setModalStateLD={setModalStateLD} />
+              </View>
+            );
+          })}
+        </ScrollView>
+      ) : (
+        <View style={styles.altContainer}>
+          <TouchableOpacity onPress={() => setModalStateNL(true)}>
+            <Text style={styles.altText}>Add a log to get started</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <LogModal modalState={modalStateNL} setModalState={setModalStateNL} />
       <LogDetails modalState={modalStateLD} setModalState={setModalStateLD} />
 
@@ -188,5 +182,20 @@ const styles = StyleSheet.create({
   },
   timelineContainer: {
     padding: 20,
+  },
+  altContainer: {
+    backgroundColor: '#fff',
+    marginVertical: 20,
+    marginHorizontal: 30,
+    borderRadius: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
+  },
+  altText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 18
   },
 });
