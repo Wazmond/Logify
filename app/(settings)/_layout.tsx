@@ -1,25 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Stack } from 'expo-router'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Stack } from "expo-router";
 
 const SettingsTab = () => {
   return (
     <Stack>
-        <Stack.Screen
-        name='settings'
+      <Stack.Screen
+        name="settings"
         options={{
-            headerShown: false
+          headerShown: false,
         }}
-        />
-        <Stack.Screen
+      />
+      <Stack.Screen
         name="about"
         options={{
-          headerShown: false
-        }} />
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="reset"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
-  )
-}
+  );
+};
 
-export default SettingsTab
+export default SettingsTab;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

@@ -25,7 +25,7 @@ const SettingsScreen = () => {
             </TouchableOpacity>
           </View>
           <View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => router.navigate("/(settings)/reset")}>
               <Text style={styles.buttonText}>Reset data</Text>
             </TouchableOpacity>
           </View>
