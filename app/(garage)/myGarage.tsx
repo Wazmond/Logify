@@ -51,26 +51,22 @@ export default function Index() {
         </View>
       </View>
 
-      <ScrollView
-        style={styles.garageContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {vehicles.length === 0 ? (
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 25,
-              justifyContent: "center",
+      {vehicles.length === 0 ? (
+        <View style={styles.altContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              router.navigate("./addMenuPage");
             }}
           >
-            <Link href="./addMenuPage">
-              <Text style={{ textAlign: "center", margin: 20 }}>
-                Add a vehicle to get started
-              </Text>
-            </Link>
-          </View>
-        ) : (
-          vehicles.map((vehicle) => {
+            <Text style={styles.altText}>Add a vehicle to get started</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.garageContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {vehicles.map((vehicle) => {
             return (
               <TouchableOpacity
                 key={vehicle.vehUUID}
@@ -80,9 +76,7 @@ export default function Index() {
                     params: { vehicle: vehicle.vehUUID },
                   })
                 }
-                style={{
-                  marginBottom: 25,
-                }}
+                style={styles.vehicleMapContainer}
               >
                 <View
                   style={{
@@ -121,23 +115,40 @@ export default function Index() {
                 </View>
               </TouchableOpacity>
             );
-          })
-        )}
-
-        {/* <Button
-          title="Clear Vehicles"
-          onPress={() => clrVeh()}
-        /> */}
-      </ScrollView>
+          })}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   garageContainer: {
     marginTop: 10,
     paddingHorizontal: 60,
+  },
+  altContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    justifyContent: "center",
+    marginHorizontal: 30,
+    marginTop: 25,
+  },
+  altText: {
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
+    textAlign: "center",
+    margin: 20,
+    fontSize: 18,
+  },
+  vehicleMapContainer: {
+    marginBottom: 25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
   },
 });
