@@ -12,11 +12,6 @@ const LogComponent: React.FC<LogComponentProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {/* <View style={styles.timelineView}>
-        <View style={styles.timelineDot} />
-        <View style={styles.timelineLine} />
-      </View> */}
-
       <View style={styles.touchableContainer}>
         <TouchableOpacity
           style={styles.logsTouchable}
@@ -46,6 +41,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flex: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
   },
   touchableContainer: {
     paddingBottom: 20,
