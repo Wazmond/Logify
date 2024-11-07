@@ -149,6 +149,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 15,
     marginHorizontal: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "#000",
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
   },
   dropdownPlaceholder: {
     textAlign: "center",

@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginHorizontal: 30,
     marginTop: 25,
-  },
-  altText: {
     shadowOffset: { width: 0, height: 2 },
     shadowColor: "#000",
     shadowRadius: 3,
     shadowOpacity: 0.2,
+  },
+  altText: {
     textAlign: "center",
     margin: 20,
     fontSize: 18,
